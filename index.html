@@ -1,0 +1,1588 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>D-BET - DAYPS Casino</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        :root { --bg-dark: #0a0e1a; --bg-panel: #111827; --bg-card: #1f2937; --bg-hover: #374151; --accent-green: #10b981; --accent-blue: #3b82f6; --accent-gold: #f59e0b; --accent-purple: #8b5cf6; --accent-red: #ef4444; --text-primary: #f9fafb; --text-secondary: #9ca3af; --border-color: #374151; --dl-cyan: #06b6d4; }
+        body { font-family: 'Inter', sans-serif; background: var(--bg-dark); color: var(--text-primary); min-height: 100vh; position: relative; }
+        .header { background: var(--bg-panel); border-bottom: 1px solid var(--border-color); padding: 0 24px; height: 70px; display: flex; align-items: center; justify-content: space-between; position: fixed; top: 0; left: 0; right: 0; z-index: 1000; }
+        .logo { display: flex; align-items: center; gap: 12px; font-weight: 800; font-size: 24px; background: linear-gradient(to right, #fff, var(--accent-green)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; cursor: pointer; }
+        .logo-icon { width: 40px; height: 40px; background: linear-gradient(135deg, var(--accent-green), #059669); border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 20px; -webkit-text-fill-color: white; }
+        .balance-center { position: absolute; left: 50%; transform: translateX(-50%); display: flex; align-items: center; gap: 12px; background: var(--bg-card); padding: 10px 24px; border-radius: 12px; border: 1px solid var(--border-color); }
+        .balance-amount { font-size: 20px; font-weight: 700; color: var(--dl-cyan); font-variant-numeric: tabular-nums; }
+        .auth-section { display: flex; align-items: center; gap: 16px; }
+        .btn { padding: 10px 20px; border-radius: 8px; font-weight: 600; cursor: pointer; transition: all 0.2s; border: none; font-size: 14px; display: inline-flex; align-items: center; gap: 8px; text-decoration: none; }
+        .btn-discord { background: #5865F2; color: white; }
+        .btn-outline { background: transparent; border: 1px solid var(--border-color); color: var(--text-primary); }
+        .btn-green { background: var(--accent-green); color: white; }
+        .btn-gold { background: var(--accent-gold); color: black; }
+        .btn-red { background: var(--accent-red); color: white; }
+        .btn-blue { background: var(--accent-blue); color: white; }
+        .btn-purple { background: var(--accent-purple); color: white; }
+        .main-content { padding-top: 90px; max-width: 1200px; margin: 0 auto; padding-left: 24px; padding-right: 24px; padding-bottom: 40px; }
+        .view { display: none; }
+        .view.active { display: block; }
+        .welcome-section { text-align: center; margin-bottom: 48px; padding: 40px 0; }
+        .welcome-title { font-size: 48px; font-weight: 800; margin-bottom: 16px; background: linear-gradient(135deg, #fff, var(--accent-green)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .welcome-subtitle { color: var(--text-secondary); font-size: 18px; max-width: 600px; margin: 0 auto; line-height: 1.6; }
+        .games-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 24px; }
+        .game-card { background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 16px; overflow: hidden; cursor: pointer; transition: all 0.3s; }
+        .game-card:hover { transform: translateY(-8px); border-color: var(--accent-green); box-shadow: 0 20px 40px rgba(16, 185, 129, 0.2); }
+        .game-image { height: 200px; display: flex; align-items: center; justify-content: center; font-size: 80px; position: relative; overflow: hidden; }
+        .game-info { padding: 24px; }
+        .game-name { font-size: 24px; font-weight: 700; margin-bottom: 8px; }
+        .game-description { color: var(--text-secondary); font-size: 14px; line-height: 1.5; }
+        .play-btn { margin-top: 16px; width: 100%; padding: 12px; background: var(--accent-green); color: white; border: none; border-radius: 8px; font-weight: 600; cursor: pointer; }
+        .game-header { display: flex; align-items: center; gap: 16px; margin-bottom: 24px; }
+        .back-btn { display: flex; align-items: center; gap: 8px; color: var(--text-secondary); background: none; border: none; font-size: 16px; cursor: pointer; padding: 8px 16px; border-radius: 8px; }
+        .back-btn:hover { color: var(--accent-green); background: var(--bg-card); }
+        .game-title { font-size: 28px; font-weight: 700; }
+        .blackjack-table { background: linear-gradient(135deg, #065f46, #047857); border-radius: 20px; padding: 40px; border: 4px solid #374151; box-shadow: 0 20px 60px rgba(0,0,0,0.5); }
+        .hand-section { margin-bottom: 40px; }
+        .hand-label { text-align: center; font-size: 14px; color: rgba(255,255,255,0.7); margin-bottom: 16px; text-transform: uppercase; letter-spacing: 0.1em; }
+        .cards-container { display: flex; justify-content: center; gap: 12px; min-height: 140px; flex-wrap: wrap; }
+        .card { width: 90px; height: 130px; background: white; border-radius: 10px; display: flex; flex-direction: column; justify-content: space-between; padding: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.3); animation: dealCard 0.3s ease; }
+        @keyframes dealCard { from { opacity: 0; transform: translateY(-50px) rotateY(180deg); } to { opacity: 1; transform: translateY(0) rotateY(0); } }
+        .card.hidden { background: linear-gradient(135deg, #b91c1c, #991b1b); background-image: repeating-linear-gradient(45deg, transparent, transparent 10px, rgba(255,255,255,0.1) 10px, rgba(255,255,255,0.1) 20px); }
+        .card-top { font-size: 18px; font-weight: 700; }
+        .card-center { font-size: 40px; text-align: center; }
+        .card-bottom { font-size: 18px; font-weight: 700; transform: rotate(180deg); }
+        .red { color: #dc2626; } .black { color: #1f2937; }
+        .score-display { text-align: center; margin-top: 16px; font-size: 24px; font-weight: 700; }
+        .game-controls { background: var(--bg-card); border-radius: 16px; padding: 24px; margin-top: 24px; }
+        .bet-section { display: flex; justify-content: center; gap: 12px; margin-bottom: 24px; flex-wrap: wrap; }
+        .bet-btn { padding: 12px 20px; border: 2px solid var(--border-color); background: var(--bg-panel); color: var(--text-primary); border-radius: 8px; font-weight: 600; cursor: pointer; transition: all 0.2s; font-variant-numeric: tabular-nums; }
+        .bet-btn:hover, .bet-btn.active { border-color: var(--accent-gold); background: rgba(245, 158, 11, 0.1); }
+        .action-buttons { display: flex; justify-content: center; gap: 12px; flex-wrap: wrap; }
+        .game-btn { padding: 14px 32px; border: none; border-radius: 8px; font-weight: 700; font-size: 16px; cursor: pointer; transition: all 0.2s; text-transform: uppercase; letter-spacing: 0.05em; }
+        .game-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+        .btn-hit { background: var(--accent-blue); color: white; }
+        .btn-stand { background: var(--accent-red); color: white; }
+        .btn-double { background: var(--accent-gold); color: white; }
+        .btn-deal { background: var(--accent-green); color: white; font-size: 18px; padding: 16px 48px; }
+        .result-message { text-align: center; font-size: 28px; font-weight: 800; margin: 24px 0; min-height: 40px; }
+        .win { color: var(--accent-green); } .lose { color: var(--accent-red); } .push { color: var(--accent-gold); }
+        .multiplier-tag { display: inline-block; background: var(--accent-gold); color: black; padding: 4px 12px; border-radius: 20px; font-size: 14px; margin-left: 10px; }
+        
+        /* ROULETTE WHEEL */
+        .roulette-container { display: flex; flex-direction: column; align-items: center; gap: 32px; }
+        .wheel-container { position: relative; margin-bottom: 20px; width: 340px; height: 340px; }
+        .wheel { width: 320px; height: 320px; border-radius: 50%; border: 8px solid var(--accent-gold); box-shadow: 0 0 40px rgba(245, 158, 11, 0.3); position: absolute; top: 10px; left: 10px; transition: transform 4s cubic-bezier(0.17, 0.67, 0.12, 0.99); }
+        .wheel-inner { width: 100%; height: 100%; position: relative; border-radius: 50%; overflow: hidden; }
+        .wheel-number { position: absolute; width: 100%; height: 100%; display: flex; align-items: flex-start; justify-content: center; font-size: 14px; font-weight: 700; color: white; text-shadow: 0 1px 2px rgba(0,0,0,0.8); transform-origin: center; padding-top: 8px; }
+        .wheel-number span { display: block; transform: rotate(180deg); margin-top: 20px; }
+        .wheel-center { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 60px; height: 60px; background: var(--accent-gold); border-radius: 50%; border: 4px solid var(--bg-panel); z-index: 10; }
+        .wheel-pointer { position: absolute; top: -10px; left: 50%; transform: translateX(-50%); width: 0; height: 0; border-left: 15px solid transparent; border-right: 15px solid transparent; border-top: 30px solid var(--accent-gold); z-index: 20; filter: drop-shadow(0 4px 6px rgba(0,0,0,0.3)); }
+        .roulette-result { text-align: center; font-size: 36px; font-weight: 800; min-height: 50px; }
+        .betting-table { background: var(--bg-card); border-radius: 16px; padding: 24px; width: 100%; max-width: 700px; }
+        .bet-options { display: grid; grid-template-columns: repeat(6, 1fr); gap: 8px; margin-bottom: 16px; }
+        .bet-option { aspect-ratio: 1; border: 2px solid var(--border-color); border-radius: 8px; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 16px; cursor: pointer; transition: all 0.2s; position: relative; font-variant-numeric: tabular-nums; }
+        .bet-option:hover { transform: scale(1.05); }
+        .bet-option.selected { box-shadow: 0 0 0 3px var(--accent-gold); transform: scale(1.1); }
+        .bet-option.red { background: #dc2626; color: white; }
+        .bet-option.black { background: #1f2937; color: white; }
+        .bet-option.green { background: var(--accent-green); color: white; }
+        .bet-amount { position: absolute; bottom: 2px; right: 2px; font-size: 9px; background: var(--accent-gold); color: black; padding: 2px 4px; border-radius: 4px; font-weight: 700; }
+        .outside-bets { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+        .outside-bet { padding: 12px; background: var(--bg-panel); border: 2px solid var(--border-color); border-radius: 8px; text-align: center; cursor: pointer; transition: all 0.2s; font-weight: 600; font-size: 13px; }
+        .outside-bet:hover { border-color: var(--accent-gold); }
+        .outside-bet.selected { background: rgba(245, 158, 11, 0.2); border-color: var(--accent-gold); }
+        .login-prompt { text-align: center; padding: 100px 20px; }
+        .login-prompt h2 { font-size: 36px; margin-bottom: 16px; }
+        .login-prompt p { color: var(--text-secondary); margin-bottom: 32px; font-size: 18px; }
+        .cases-tabs { display: flex; gap: 12px; margin-bottom: 24px; }
+        .case-tab { padding: 12px 24px; background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 8px; cursor: pointer; transition: all 0.2s; font-weight: 600; }
+        .case-tab:hover { background: var(--bg-hover); }
+        .case-tab.active { background: var(--accent-purple); border-color: var(--accent-purple); }
+        .create-case-btn { margin-left: auto; background: var(--accent-green); color: white; border: none; }
+        .cases-grid-new { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 20px; }
+        .case-card-new { background: var(--bg-card); border: 2px solid var(--border-color); border-radius: 16px; padding: 20px; transition: all 0.3s; position: relative; }
+        .case-card-new:hover { border-color: var(--accent-purple); transform: translateY(-4px); }
+        .case-header { display: flex; align-items: center; gap: 12px; margin-bottom: 16px; }
+        .case-icon-new { width: 60px; height: 60px; background: linear-gradient(135deg, var(--accent-purple), #6d28d9); border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 30px; }
+        .case-info h3 { font-size: 18px; margin-bottom: 4px; }
+        .case-info p { font-size: 12px; color: var(--text-secondary); }
+        .case-price-new { font-size: 24px; font-weight: 800; color: var(--dl-cyan); margin-bottom: 12px; }
+        .case-stats { display: flex; gap: 16px; font-size: 12px; color: var(--text-secondary); margin-bottom: 12px; }
+        .case-actions { display: flex; gap: 8px; }
+        .case-actions button { flex: 1; padding: 10px; border-radius: 6px; border: none; font-weight: 600; cursor: pointer; transition: all 0.2s; }
+        .btn-open-case { background: var(--accent-purple); color: white; }
+        .btn-edit { background: var(--accent-blue); color: white; }
+        .btn-delete { background: var(--accent-red); color: white; }
+        .btn-claim { background: var(--accent-gold); color: black; }
+        .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.8); display: none; align-items: center; justify-content: center; z-index: 2000; padding: 20px; }
+        .modal-overlay.active { display: flex; }
+        .modal { background: var(--bg-panel); border-radius: 16px; max-width: 800px; width: 100%; max-height: 90vh; overflow-y: auto; }
+        .modal-header { padding: 20px 24px; border-bottom: 1px solid var(--border-color); display: flex; justify-content: space-between; align-items: center; }
+        .modal-header h2 { font-size: 24px; }
+        .modal-close { background: none; border: none; color: var(--text-secondary); font-size: 28px; cursor: pointer; }
+        .modal-close:hover { color: var(--accent-red); }
+        .modal-body { padding: 24px; }
+        .form-group { margin-bottom: 20px; }
+        .form-group label { display: block; margin-bottom: 8px; font-weight: 600; font-size: 14px; }
+        .form-group input, .form-group select { width: 100%; padding: 12px; background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 8px; color: var(--text-primary); font-size: 14px; }
+        .items-list { max-height: 300px; overflow-y: auto; border: 1px solid var(--border-color); border-radius: 8px; padding: 12px; }
+        .item-row { display: grid; grid-template-columns: 40px 1fr 100px 100px 40px; gap: 8px; align-items: center; padding: 8px; border-bottom: 1px solid var(--border-color); }
+        .add-item-btn { margin-top: 12px; width: 100%; padding: 12px; background: var(--bg-hover); border: 2px dashed var(--border-color); border-radius: 8px; color: var(--text-secondary); cursor: pointer; font-weight: 600; }
+        .case-preview { background: var(--bg-card); padding: 16px; border-radius: 8px; margin-top: 20px; }
+        .calculated-price { font-size: 32px; font-weight: 800; color: var(--accent-green); text-align: center; margin: 16px 0; }
+        
+        /* ITEM SELECTOR UI */
+        .item-selector { max-height: 400px; overflow-y: auto; border: 1px solid var(--border-color); border-radius: 12px; padding: 16px; background: var(--bg-dark); }
+        .item-selector-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 12px; }
+        .item-selector-item { background: var(--bg-card); border: 2px solid var(--border-color); border-radius: 12px; padding: 12px; cursor: pointer; transition: all 0.2s; text-align: center; display: flex; flex-direction: column; align-items: center; gap: 8px; }
+        .item-selector-item:hover { border-color: var(--accent-purple); transform: translateY(-2px); }
+        .item-selector-item img { width: 50px; height: 50px; object-fit: contain; }
+        .item-selector-item .item-name { font-size: 11px; font-weight: 600; color: var(--text-primary); }
+        .item-selector-item .item-price { font-size: 12px; color: var(--dl-cyan); font-weight: 700; }
+        .item-selector-search { width: 100%; padding: 12px 16px; background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 8px; color: var(--text-primary); font-size: 14px; margin-bottom: 16px; }
+        
+        /* CASE ROULETTE - Fixed animation */
+        .case-roulette-wrapper { position: relative; width: 100%; max-width: 900px; margin: 40px auto; overflow: hidden; padding: 20px 0; }
+        .case-roulette-container { position: relative; width: 100%; height: 180px; overflow: hidden; }
+        .case-roulette { display: flex; align-items: center; gap: 16px; position: absolute; left: 50%; will-change: transform; }
+        .roulette-item { min-width: 120px; height: 140px; background: var(--bg-card); border: 2px solid var(--border-color); border-radius: 16px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 6px; transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); padding: 12px; flex-shrink: 0; }
+        .roulette-item img { width: 70px; height: 70px; object-fit: contain; image-rendering: pixelated; transition: transform 0.3s ease; }
+        .roulette-item:hover img { transform: scale(1.1); }
+        .roulette-item.winner { border-color: var(--accent-gold); box-shadow: 0 0 50px rgba(245, 158, 11, 0.8), inset 0 0 20px rgba(245, 158, 11, 0.2); transform: scale(1.15); background: linear-gradient(135deg, var(--bg-card), rgba(245, 158, 11, 0.25)); z-index: 10; animation: winnerPulse 1s ease-in-out infinite; }
+        @keyframes winnerPulse { 0%, 100% { box-shadow: 0 0 50px rgba(245, 158, 11, 0.8), inset 0 0 20px rgba(245, 158, 11, 0.2); } 50% { box-shadow: 0 0 80px rgba(245, 158, 11, 1), inset 0 0 30px rgba(245, 158, 11, 0.3); } }
+        .roulette-item .item-name { font-size: 11px; font-weight: 600; text-align: center; color: var(--text-primary); }
+        .roulette-item .item-price { font-size: 10px; color: var(--dl-cyan); font-weight: 700; }
+        .roulette-item.winner .item-name { color: var(--accent-gold); font-size: 12px; font-weight: 700; }
+        .roulette-fade-left, .roulette-fade-right { position: absolute; top: 0; bottom: 0; width: 150px; pointer-events: none; z-index: 5; }
+        .roulette-fade-left { left: 0; background: linear-gradient(to right, var(--bg-dark) 0%, transparent 100%); }
+        .roulette-fade-right { right: 0; background: linear-gradient(to left, var(--bg-dark) 0%, transparent 100%); }
+        
+        /* RED ARROW INDICATOR */
+        .roulette-arrow { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 0; height: 0; border-left: 12px solid transparent; border-right: 12px solid transparent; border-top: 24px solid var(--accent-red); z-index: 100; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.5)); margin-top: -80px; }
+        .roulette-arrow::after { content: ''; position: absolute; top: -28px; left: -8px; width: 16px; height: 16px; background: var(--accent-red); border-radius: 50%; }
+        
+        .admin-panel { background: var(--bg-card); border-radius: 16px; padding: 24px; }
+        .admin-table { width: 100%; border-collapse: collapse; }
+        .admin-table th, .admin-table td { padding: 12px; text-align: left; border-bottom: 1px solid var(--border-color); }
+        .admin-table th { font-weight: 600; color: var(--text-secondary); font-size: 12px; text-transform: uppercase; }
+        .balance-input { width: 100px; padding: 6px; background: var(--bg-dark); border: 1px solid var(--border-color); border-radius: 4px; color: var(--text-primary); text-align: center; }
+        .balance-adjust { display: flex; gap: 4px; align-items: center; }
+        .balance-adjust button { padding: 4px 8px; border: none; border-radius: 4px; cursor: pointer; font-weight: 600; font-size: 12px; }
+        .btn-add { background: var(--accent-green); color: white; }
+        .btn-sub { background: var(--accent-red); color: white; }
+        .admin-badge { display: inline-block; background: var(--accent-red); color: white; padding: 2px 8px; border-radius: 4px; font-size: 10px; font-weight: 700; margin-left: 8px; }
+        .my-cases-stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; margin-bottom: 24px; }
+        .stat-card { background: var(--bg-card); padding: 20px; border-radius: 12px; border: 1px solid var(--border-color); }
+        .stat-card h4 { font-size: 12px; color: var(--text-secondary); margin-bottom: 8px; text-transform: uppercase; }
+        .stat-card .value { font-size: 28px; font-weight: 800; color: var(--accent-green); }
+        
+        /* CURRENT BET DISPLAY */
+        .current-bet-display { text-align: center; padding: 12px; background: rgba(245, 158, 11, 0.1); border: 2px solid var(--accent-gold); border-radius: 12px; margin-bottom: 16px; }
+        .current-bet-display span { font-size: 14px; color: var(--text-secondary); }
+        .current-bet-display .bet-amount-display { font-size: 24px; font-weight: 800; color: var(--accent-gold); }
+        
+        /* AUTH MODALS */
+        .auth-tabs { display: flex; gap: 8px; margin-bottom: 20px; }
+        .auth-tab { flex: 1; padding: 12px; background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 8px; color: var(--text-primary); font-weight: 600; cursor: pointer; transition: all 0.2s; }
+        .auth-tab.active { background: var(--accent-green); border-color: var(--accent-green); color: white; }
+        .auth-error { color: var(--accent-red); text-align: center; margin-top: 12px; font-size: 14px; }
+        
+        /* SOCIAL LINKS */
+        .social-links { display: flex; gap: 12px; align-items: center; }
+        .social-link { width: 36px; height: 36px; border-radius: 8px; display: flex; align-items: center; justify-content: center; text-decoration: none; font-size: 18px; transition: all 0.2s; }
+        .social-link.dashboard { background: var(--accent-blue); color: white; }
+        .social-link.discord { background: #5865F2; color: white; }
+        .social-link.youtube { background: #FF0000; color: white; }
+        .social-link:hover { transform: scale(1.1); }
+        
+        /* WATERMARK */
+        .watermark { position: fixed; bottom: 20px; right: 20px; font-size: 12px; color: var(--text-secondary); opacity: 0.7; z-index: 1000; pointer-events: none; font-weight: 500; }
+        .watermark a { color: var(--accent-green); text-decoration: none; pointer-events: auto; }
+        
+        @media (max-width: 768px) { .balance-center { position: static; transform: none; order: 3; margin-top: 10px; } .header { flex-wrap: wrap; height: auto; padding: 12px; } }
+    </style>
+<base target="_blank">
+</head>
+<body>
+    <header class="header">
+        <div class="logo" onclick="showView('lobby')"><div class="logo-icon">🎰</div><span>D-BET</span></div>
+        <div class="balance-center" id="balanceDisplay" style="display: none;"><div class="balance-amount" id="balanceAmount">0.00</div><div style="font-size: 11px; color: var(--text-secondary); text-transform: uppercase;">Balance</div></div>
+        <div class="auth-section" id="authSection">
+            <div class="social-links" style="margin-right: 12px;">
+                <a href="https://day-ps.github.io/dashboard/" class="social-link dashboard" title="Dashboard">📊</a>
+                <a href="https://discord.com/invite/52fSZkWcPs" class="social-link discord" title="Discord">💬</a>
+                <a href="https://www.youtube.com/" class="social-link youtube" title="YouTube">▶️</a>
+            </div>
+            <button class="btn btn-green" onclick="showAuthModal()">Login / Register</button>
+        </div>
+    </header>
+    <main class="main-content">
+        <div id="lobby" class="view active">
+            <div id="loggedOutPrompt" class="login-prompt"><h2>Welcome to D-BET</h2><p>The premier casino for DAYPS.<br>Login or register to start playing!</p><button class="btn btn-green" style="font-size: 18px; padding: 16px 32px;" onclick="showAuthModal()">Get Started</button></div>
+            <div id="loggedInContent" style="display: none;">
+                <div class="welcome-section"><h1 class="welcome-title">Welcome back, <span id="username">Player</span>!</h1><p class="welcome-subtitle">Choose your game below. Good luck!</p></div>
+                <div class="games-grid">
+                    <div class="game-card" onclick="showView('blackjack')"><div class="game-image" style="background: linear-gradient(135deg, #1f2937, #111827);">🃏</div><div class="game-info"><div class="game-name">Blackjack</div><div class="game-description">Classic 21 card game. Beat the dealer!</div><button class="play-btn">Play Now</button></div></div>
+                    <div class="game-card" onclick="showView('roulette')"><div class="game-image" style="background: linear-gradient(135deg, #1f2937, #111827);">🎡</div><div class="game-info"><div class="game-name">Roulette</div><div class="game-description">European Roulette, test your luck!</div><button class="play-btn">Play Now</button></div></div>
+                    <div class="game-card" onclick="showView('cases')"><div class="game-image" style="background: linear-gradient(135deg, #1f2937, #111827);">📦</div><div class="game-info"><div class="game-name">Community Cases</div><div class="game-description">Open cases created by the community!</div><button class="play-btn">Open Cases</button></div></div>
+                </div>
+            </div>
+        </div>
+        <div id="blackjack" class="view">
+            <div class="game-header"><button class="back-btn" onclick="showView('lobby')">← Back</button><h1 class="game-title">🃏 Blackjack</h1></div>
+            <div class="blackjack-table">
+                <div class="hand-section"><div class="hand-label">Dealer's Hand</div><div class="cards-container" id="dealerCards"></div><div class="score-display" id="dealerScore"></div></div>
+                <div class="result-message" id="bjResult"></div>
+                <div class="hand-section"><div class="hand-label">Your Hand</div><div class="cards-container" id="playerCards"></div><div class="score-display" id="playerScore"></div></div>
+            </div>
+            <div class="game-controls">
+                <div class="current-bet-display" id="currentBetDisplay" style="display: none;"><span>Current Bet</span><div class="bet-amount-display" id="betAmountDisplay">0.00 DL</div></div>
+                <div class="bet-section" id="bjBetSection"><button class="bet-btn" data-amount="0.10">0.10</button><button class="bet-btn" data-amount="0.50">0.50</button><button class="bet-btn" data-amount="1.00">1.00</button><button class="bet-btn" data-amount="5.00">5.00</button><button class="bet-btn" data-amount="10.00">10.00</button></div>
+                <div class="action-buttons" id="bjActions"><button class="game-btn btn-deal" id="bjDealBtn">Deal Cards</button></div>
+            </div>
+        </div>
+        <div id="roulette" class="view">
+            <div class="game-header"><button class="back-btn" onclick="showView('lobby')">← Back</button><h1 class="game-title">🎡 Roulette</h1></div>
+            <div class="roulette-container">
+                <div class="wheel-container">
+                    <div class="wheel-pointer"></div>
+                    <div class="wheel" id="rouletteWheel">
+                        <div class="wheel-inner" id="wheelInner"></div>
+                        <div class="wheel-center"></div>
+                    </div>
+                </div>
+                <div class="roulette-result" id="rouletteResult"></div>
+                <div class="betting-table"><div class="bet-options" id="rouletteNumbers"></div><div class="outside-bets" id="rouletteOutside"></div></div>
+                <div class="game-controls">
+                    <div class="bet-section"><button class="bet-btn roulette-bet" data-amount="0.10">0.10</button><button class="bet-btn roulette-bet" data-amount="0.50">0.50</button><button class="bet-btn roulette-bet" data-amount="1.00">1.00</button><button class="bet-btn roulette-bet" data-amount="5.00">5.00</button></div>
+                    <div style="text-align: center; margin-bottom: 16px; color: var(--text-secondary);">Total Bet: <span id="rouletteTotalBet" style="color: var(--dl-cyan); font-weight: 700;">0.00</span> DL</div>
+                    <div class="action-buttons"><button class="game-btn btn-outline" onclick="clearRouletteBets()">Clear</button><button class="game-btn btn-deal" id="spinBtn">SPIN</button></div>
+                </div>
+            </div>
+        </div>
+        <div id="cases" class="view">
+            <div class="game-header"><button class="back-btn" onclick="showView('lobby')">← Back</button><h1 class="game-title">📦 Community Cases</h1></div>
+            <div class="cases-tabs"><button class="case-tab active" onclick="switchCaseTab('all')">All Cases</button><button class="case-tab" onclick="switchCaseTab('my')">My Cases</button><button class="btn btn-green create-case-btn" id="createCaseBtn" onclick="openCreateCaseModal()">+ Create Case</button></div>
+            <div id="allCasesTab" class="cases-tab-content"><div class="cases-grid-new" id="allCasesGrid"></div></div>
+            <div id="myCasesTab" class="cases-tab-content" style="display: none;">
+                <div class="my-cases-stats" id="myCasesStats">
+                    <div class="stat-card"><h4>Total Cases Created</h4><div class="value" id="totalCasesCreated">0</div></div>
+                    <div class="stat-card"><h4>Total Opens</h4><div class="value" id="totalOpens">0</div></div>
+                    <div class="stat-card"><h4>Pending Earnings</h4><div class="value" id="pendingEarnings">0.00</div></div>
+                    <div class="stat-card"><h4>Total Earned</h4><div class="value" id="totalEarned">0.00</div></div>
+                </div>
+                <div class="cases-grid-new" id="myCasesGrid"></div>
+            </div>
+        </div>
+        <div id="caseOpening" class="view">
+            <div class="game-header"><button class="back-btn" onclick="showView('cases')">← Back</button><h1 class="game-title" id="openingCaseName">Opening Case</h1></div>
+            <div class="case-opening-container" style="text-align: center; padding: 40px 0;">
+                <div class="case-roulette-wrapper">
+                    <div class="roulette-arrow"></div>
+                    <div class="case-roulette-container">
+                        <div class="case-roulette" id="caseRoulette"></div>
+                    </div>
+                    <div class="roulette-fade-left"></div>
+                    <div class="roulette-fade-right"></div>
+                </div>
+                <div class="result-message" id="caseOpeningResult"></div>
+                <div class="game-controls"><div class="case-price-new" id="openingCasePrice"></div><button class="game-btn btn-deal" id="openCaseSpinBtn" onclick="spinCase()">OPEN CASE</button></div>
+            </div>
+        </div>
+        <div id="adminPanel" class="view">
+            <div class="game-header"><button class="back-btn" onclick="showView('lobby')">← Back</button><h1 class="game-title">🔒 Admin Panel</h1></div>
+            <div class="admin-panel"><table class="admin-table"><thead><tr><th>User ID</th><th>Username</th><th>Balance (DL)</th><th>Cases</th><th>Opens</th><th>Actions</th></tr></thead><tbody id="adminUsersTable"></tbody></table></div>
+        </div>
+    </main>
+    
+    <div class="watermark">Made by <a href="https://discord.com/users/834831162928398406" target="_blank">@Ghost</a></div>
+    
+    <div class="modal-overlay" id="authModal">
+        <div class="modal" style="max-width: 450px;">
+            <div class="modal-header"><h2 id="authModalTitle">Welcome to D-BET</h2><button class="modal-close" onclick="closeAuthModal()">&times;</button></div>
+            <div class="modal-body">
+                <div class="auth-tabs">
+                    <button class="auth-tab active" id="loginTab" onclick="switchAuthTab('login')">Login</button>
+                    <button class="auth-tab" id="registerTab" onclick="switchAuthTab('register')">Register</button>
+                </div>
+                <div id="loginForm">
+                    <div class="form-group"><label>Username</label><input type="text" id="loginUsername" placeholder="Enter your username..."></div>
+                    <div class="form-group"><label>Password</label><input type="password" id="loginPassword" placeholder="Enter your password..."></div>
+                    <button class="btn btn-green" style="width: 100%;" onclick="login()">Login</button>
+                </div>
+                <div id="registerForm" style="display: none;">
+                    <div class="form-group"><label>Username</label><input type="text" id="registerUsername" placeholder="Choose a username..."></div>
+                    <div class="form-group"><label>Password</label><input type="password" id="registerPassword" placeholder="Choose a password..."></div>
+                    <div class="form-group"><label>Confirm Password</label><input type="password" id="registerConfirmPassword" placeholder="Confirm your password..."></div>
+                    <button class="btn btn-green" style="width: 100%;" onclick="register()">Create Account</button>
+                </div>
+                <p id="authError" class="auth-error" style="display: none;"></p>
+            </div>
+        </div>
+    </div>
+    
+    <div class="modal-overlay" id="caseModal">
+        <div class="modal">
+            <div class="modal-header"><h2 id="modalTitle">Create New Case</h2><button class="modal-close" onclick="closeCaseModal()">&times;</button></div>
+            <div class="modal-body">
+                <div class="form-group"><label>Case Name</label><input type="text" id="caseNameInput" placeholder="Enter case name..." maxlength="30"></div>
+                <div class="form-group"><label>Select Items</label><div class="items-list" id="itemsList"><p style="color: var(--text-secondary); text-align: center; padding: 20px;">No items added yet.</p></div><button class="add-item-btn" onclick="showItemSelector()">+ Add Item to Case</button></div>
+                <div class="case-preview"><h4>Case Preview & Pricing</h4><div id="caseItemsPreview"><p style="color: var(--text-secondary); text-align: center; padding: 20px;">Add items to see preview</p></div><div class="calculated-price" id="calculatedPrice">0.00 DL</div></div>
+                <div style="display: flex; gap: 12px; margin-top: 20px;"><button class="btn btn-outline" style="flex: 1;" onclick="closeCaseModal()">Cancel</button><button class="btn btn-green" style="flex: 1;" onclick="saveCase()">Save Case</button></div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="modal-overlay" id="itemSelectorModal">
+        <div class="modal" style="max-width: 700px;">
+            <div class="modal-header"><h2>Select an Item</h2><button class="modal-close" onclick="closeItemSelector()">&times;</button></div>
+            <div class="modal-body">
+                <input type="text" class="item-selector-search" id="itemSearch" placeholder="Search items..." oninput="filterItems()">
+                <div class="item-selector" id="itemSelectorContent"></div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="modal-overlay" id="adminLoginModal">
+        <div class="modal" style="max-width: 400px;">
+            <div class="modal-header"><h2>Admin Login</h2><button class="modal-close" onclick="closeAdminLogin()">&times;</button></div>
+            <div class="modal-body">
+                <div class="form-group"><label>Username</label><input type="text" id="adminUserInput" placeholder="Enter admin username..."></div>
+                <div class="form-group"><label>Password</label><input type="password" id="adminPassInput" placeholder="Enter admin password..."></div>
+                <button class="btn btn-green" style="width: 100%; margin-top: 12px;" onclick="adminLogin()">Login</button>
+                <p id="adminLoginError" style="color: var(--accent-red); text-align: center; margin-top: 12px; display: none;">Invalid credentials!</p>
+            </div>
+        </div>
+    </div>
+        <script>
+        // ==================== CONFIGURATION ====================
+        const ADMIN_CREDENTIALS = { username: 'admin', password: 'Adm1n1strat0r' };
+        const MAX_CASES_PER_USER = 5;
+        const OWNER_CUT_PERCENTAGE = 0.1;
+
+        // ==================== ITEMS DATABASE ====================
+        const ITEMS_DB = [
+            { name: 'Dirt', png: 'dirt.png', price: 0.01 },
+            { name: 'Lava', png: 'lava.png', price: 0.01 },
+            { name: 'World Lock', png: 'wl.png', price: 0.01 },
+            { name: 'Spike', png: 'spike.png', price: 0.02 },
+            { name: 'Heart Bow', png: 'heartbow.png', price: 0.04 },
+            { name: 'Basketball', png: 'basketball.png', price: 0.05 },
+            { name: 'Golden Booty Chest', png: 'goldenbootychest.png', price: 0.05 },
+            { name: 'Love Bug', png: 'lovebug.png', price: 0.06 },
+            { name: 'Teeny Wings', png: 'teenywings.png', price: 0.08 },
+            { name: 'Dragon', png: 'dragon.png', price: 0.12 },
+            { name: 'Diamond Wings', png: 'diamondwings.png', price: 0.14 },
+            { name: 'Ice Dragon', png: 'icedragon.png', price: 0.15 },
+            { name: 'Blazing Electro Wings', png: 'blazingelectrowings.png', price: 0.24 },
+            { name: 'Crystal', png: 'crystal.png', price: 0.30 },
+            { name: 'Diamond Dragon', png: 'diamonddragon.png', price: 0.40 },
+            { name: 'Angel Wings', png: 'angelwings.png', price: 0.50 },
+            { name: 'Emerald Pickaxe', png: 'emeraldpickaxe.png', price: 0.80 },
+            { name: 'Diamond Lock', png: 'dl.png', price: 1.00 },
+            { name: 'Diamond Flashaxe', png: 'diamondflashaxe.png', price: 1.20 },
+            { name: 'Cosmic Cape', png: 'cosmiccape.png', price: 2.60 },
+            { name: 'Flaming Aura', png: 'flamingaura.png', price: 3.40 },
+            { name: 'Atomic Shadow Scythe', png: 'atomicshadowscythe.png', price: 4.00 },
+            { name: 'Aquatic Volcanic Cape', png: 'aquaticvolcaniccape.png', price: 5.00 },
+            { name: 'Axe of Ragnarok', png: 'axeofragnarok.png', price: 5.20 },
+            { name: 'Aurora Wings', png: 'aurorawings.png', price: 5.80 },
+            { name: 'Apocalypse Scythe', png: 'apocalypsescythe.png', price: 6.20 },
+            { name: 'Bloodmoon Wings', png: 'bloodmoonwings.png', price: 7.80 },
+            { name: 'Royal Bloodmoon Wings', png: 'royalbloodmoonwings.png', price: 10.00 },
+            { name: 'Constellation Wings', png: 'constellationwings.png', price: 12.00 },
+            { name: 'Devil Wings', png: 'devilwings.png', price: 17.00 },
+            { name: 'UV', png: 'uv.png', price: 20.00 },
+            { name: 'Golden Heartbow', png: 'goldenheartbow.png', price: 30.00 },
+            { name: 'Legendary Wizard', png: 'legendarywizard.png', price: 50.00 },
+            { name: 'Magplant', png: 'magplant.png', price: 80.00 },
+            { name: 'Blue Gem Lock', png: 'bgl.png', price: 100.00 },
+            { name: "Angel of Mercy's Wings", png: 'angelofmercyswings.png', price: 120.00 },
+            { name: 'Dragon of Legend', png: 'dragonoflegend.png', price: 250.00 },
+            { name: 'Golden Angel Wings', png: 'goldenangelwings.png', price: 400.00 },
+            { name: "Legendary Dragon Knight's Wings", png: 'legendarydragonknightswings.png', price: 500.00 }
+        ];
+
+        // ==================== STATE ====================
+        let currentUser = null;
+        let balance = 0;
+        let isAdmin = false;
+        let cases = [];
+        let editingCaseId = null;
+        let currentCaseItems = [];
+        let openingCaseId = null;
+        
+        // Blackjack state
+        let bjDeck = [], bjPlayerHand = [], bjDealerHand = [], bjGameActive = false, bjCurrentBet = 0, bjOriginalBet = 0, bjDoubledDown = false;
+        
+        // Roulette state
+        let rouletteBets = {}, rouletteCurrentBet = 0, rouletteSpinning = false, wheelRotation = 0;
+
+        const suits = ['♠', '♥', '♦', '♣'], values = ['2', '3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K', 'A'];
+        const rouletteNumbers = [
+            {num: 0, color: 'green'}, {num: 32, color: 'red'}, {num: 15, color: 'black'}, {num: 19, color: 'red'}, 
+            {num: 4, color: 'black'}, {num: 21, color: 'red'}, {num: 2, color: 'black'}, {num: 25, color: 'red'}, 
+            {num: 17, color: 'black'}, {num: 34, color: 'red'}, {num: 6, color: 'black'}, {num: 27, color: 'red'}, 
+            {num: 13, color: 'black'}, {num: 36, color: 'red'}, {num: 11, color: 'black'}, {num: 30, color: 'red'}, 
+            {num: 8, color: 'black'}, {num: 23, color: 'red'}, {num: 10, color: 'black'}, {num: 5, color: 'red'}, 
+            {num: 24, color: 'black'}, {num: 16, color: 'red'}, {num: 33, color: 'black'}, {num: 1, color: 'red'}, 
+            {num: 20, color: 'black'}, {num: 14, color: 'red'}, {num: 31, color: 'black'}, {num: 9, color: 'red'}, 
+            {num: 22, color: 'black'}, {num: 18, color: 'red'}, {num: 29, color: 'black'}, {num: 7, color: 'red'}, 
+            {num: 28, color: 'black'}, {num: 12, color: 'red'}, {num: 35, color: 'black'}, {num: 3, color: 'red'}, 
+            {num: 26, color: 'black'}
+        ];
+
+        // ==================== LOCAL STORAGE (FIXED) ====================
+        function saveToStorage() {
+            try {
+                const users = getAllUsers();
+                if (currentUser) {
+                    users[currentUser.id] = currentUser;
+                }
+                const data = { 
+                    users: users, 
+                    cases: cases, 
+                    timestamp: Date.now(),
+                    currentUserId: currentUser ? currentUser.id : null,
+                    isAdmin: isAdmin
+                };
+                localStorage.setItem('dbet_data', JSON.stringify(data));
+                console.log('Data saved successfully');
+            } catch (e) {
+                console.error('Error saving to storage:', e);
+                alert('Error saving data. Storage might be full or disabled.');
+            }
+        }
+
+        function loadFromStorage() {
+            try {
+                const data = localStorage.getItem('dbet_data');
+                if (data) {
+                    const parsed = JSON.parse(data);
+                    cases = parsed.cases || [];
+                    
+                    // Restore current user session - FIXED
+                    if (parsed.currentUserId && parsed.users && parsed.users[parsed.currentUserId]) {
+                        currentUser = parsed.users[parsed.currentUserId];
+                        balance = currentUser.balance || 0;
+                        isAdmin = currentUser.isAdmin || false;
+                        console.log('Session restored for user:', currentUser.username);
+                    }
+                    
+                    console.log('Data loaded successfully:', parsed);
+                    return parsed.users || {};
+                }
+            } catch (e) {
+                console.error('Error loading from storage:', e);
+            }
+            return {};
+        }
+
+        function getAllUsers() {
+            try {
+                const data = localStorage.getItem('dbet_data');
+                if (data) {
+                    const parsed = JSON.parse(data);
+                    return parsed.users || {};
+                }
+            } catch (e) {
+                console.error('Error getting users:', e);
+            }
+            return {};
+        }
+
+        function saveUser(user) {
+            const users = getAllUsers();
+            users[user.id] = user;
+            const data = { 
+                users: users, 
+                cases: cases, 
+                timestamp: Date.now(),
+                currentUserId: currentUser ? currentUser.id : null,
+                isAdmin: isAdmin
+            };
+            localStorage.setItem('dbet_data', JSON.stringify(data));
+        }
+                // ==================== AUTH ====================
+        function showAuthModal() {
+            document.getElementById('authModal').classList.add('active');
+            document.getElementById('authError').style.display = 'none';
+        }
+
+        function closeAuthModal() {
+            document.getElementById('authModal').classList.remove('active');
+            document.getElementById('loginUsername').value = '';
+            document.getElementById('loginPassword').value = '';
+            document.getElementById('registerUsername').value = '';
+            document.getElementById('registerPassword').value = '';
+            document.getElementById('registerConfirmPassword').value = '';
+            document.getElementById('authError').style.display = 'none';
+        }
+
+        function switchAuthTab(tab) {
+            document.querySelectorAll('.auth-tab').forEach(t => t.classList.remove('active'));
+            if (tab === 'login') {
+                document.getElementById('loginTab').classList.add('active');
+                document.getElementById('loginForm').style.display = 'block';
+                document.getElementById('registerForm').style.display = 'none';
+            } else {
+                document.getElementById('registerTab').classList.add('active');
+                document.getElementById('loginForm').style.display = 'none';
+                document.getElementById('registerForm').style.display = 'block';
+            }
+            document.getElementById('authError').style.display = 'none';
+        }
+
+        function register() {
+            const username = document.getElementById('registerUsername').value.trim();
+            const password = document.getElementById('registerPassword').value;
+            const confirmPassword = document.getElementById('registerConfirmPassword').value;
+            
+            if (!username || !password) {
+                showAuthError('Please fill in all fields');
+                return;
+            }
+            if (username.length < 3) {
+                showAuthError('Username must be at least 3 characters');
+                return;
+            }
+            if (password.length < 4) {
+                showAuthError('Password must be at least 4 characters');
+                return;
+            }
+            if (password !== confirmPassword) {
+                showAuthError('Passwords do not match');
+                return;
+            }
+            
+            const users = getAllUsers();
+            const usernameLower = username.toLowerCase();
+            
+            // Check if username exists (case-insensitive)
+            for (let userId in users) {
+                if (users[userId].username.toLowerCase() === usernameLower) {
+                    showAuthError('Username already exists');
+                    return;
+                }
+            }
+            
+            const userId = 'user_' + Date.now();
+            currentUser = { 
+                id: userId, 
+                username: username, 
+                usernameLower: usernameLower,
+                password: password,
+                balance: 0.00,
+                casesCreated: 0, 
+                totalOpens: 0, 
+                pendingEarnings: 0, 
+                totalEarned: 0, 
+                isAdmin: false 
+            };
+            balance = currentUser.balance;
+            
+            saveUser(currentUser);
+            
+            closeAuthModal();
+            updateUI();
+        }
+
+        function login() {
+            const username = document.getElementById('loginUsername').value.trim();
+            const password = document.getElementById('loginPassword').value;
+            
+            if (!username || !password) {
+                showAuthError('Please enter username and password');
+                return;
+            }
+            
+            const users = getAllUsers();
+            const usernameLower = username.toLowerCase();
+            
+            // Find user by username (case-insensitive)
+            let foundUser = null;
+            for (let userId in users) {
+                if (users[userId].username.toLowerCase() === usernameLower && users[userId].password === password) {
+                    foundUser = users[userId];
+                    break;
+                }
+            }
+            
+            if (foundUser) {
+                currentUser = foundUser;
+                balance = foundUser.balance;
+                isAdmin = foundUser.isAdmin || false;
+                closeAuthModal();
+                updateUI();
+                saveToStorage(); // Save session immediately
+            } else {
+                showAuthError('Invalid username or password');
+            }
+        }
+
+        function showAuthError(message) {
+            const errorEl = document.getElementById('authError');
+            errorEl.textContent = message;
+            errorEl.style.display = 'block';
+        }
+
+        function logout() {
+            currentUser = null; 
+            balance = 0; 
+            isAdmin = false;
+            // Clear session from storage
+            const data = { 
+                users: getAllUsers(), 
+                cases: cases, 
+                timestamp: Date.now(),
+                currentUserId: null,
+                isAdmin: false
+            };
+            localStorage.setItem('dbet_data', JSON.stringify(data));
+            updateUI(); 
+            showView('lobby');
+        }
+
+        function adminLogin() {
+            const username = document.getElementById('adminUserInput').value;
+            const password = document.getElementById('adminPassInput').value;
+            if (username.toLowerCase() === ADMIN_CREDENTIALS.username.toLowerCase() && password === ADMIN_CREDENTIALS.password) {
+                isAdmin = true;
+                currentUser = { id: 'admin', username: 'Admin', balance: 999999.99, isAdmin: true };
+                balance = currentUser.balance;
+                closeAdminLogin(); 
+                updateUI(); 
+                showView('adminPanel'); 
+                renderAdminPanel();
+                saveToStorage(); // Save admin session
+            } else {
+                document.getElementById('adminLoginError').style.display = 'block';
+            }
+        }
+
+        function showAdminLogin() { document.getElementById('adminLoginModal').classList.add('active'); }
+        function closeAdminLogin() { document.getElementById('adminLoginModal').classList.remove('active'); document.getElementById('adminUserInput').value = ''; document.getElementById('adminPassInput').value = ''; document.getElementById('adminLoginError').style.display = 'none'; }
+
+        function updateUI() {
+            if (currentUser) {
+                document.getElementById('loggedOutPrompt').style.display = 'none';
+                document.getElementById('loggedInContent').style.display = 'block';
+                document.getElementById('balanceDisplay').style.display = 'flex';
+                document.getElementById('username').textContent = currentUser.username;
+                updateBalanceDisplay();
+                
+                let socialHTML = `
+                    <div class="social-links" style="margin-right: 12px;">
+                        <a href="https://day-ps.github.io/dashboard/" class="social-link dashboard" title="Dashboard">📊</a>
+                        <a href="https://discord.com/invite/52fSZkWcPs" class="social-link discord" title="Discord">💬</a>
+                        <a href="https://www.youtube.com/" class="social-link youtube" title="YouTube">▶️</a>
+                    </div>
+                `;
+                
+                let authHTML = `<div style="display: flex; align-items: center; gap: 12px;"><div style="width: 36px; height: 36px; border-radius: 50%; background: linear-gradient(135deg, var(--accent-purple), var(--accent-blue)); display: flex; align-items: center; justify-content: center; font-weight: 700;">${currentUser.username[0]}</div><span style="font-weight: 600;">${currentUser.username}</span>${currentUser.isAdmin ? '<span class="admin-badge">ADMIN</span>' : ''}</div>`;
+                if (currentUser.isAdmin) authHTML += `<button class="btn btn-gold" onclick="showView('adminPanel'); renderAdminPanel();">Admin Panel</button>`;
+                authHTML += `<button class="btn btn-outline" onclick="logout()">Logout</button>`;
+                
+                document.getElementById('authSection').innerHTML = socialHTML + authHTML;
+            } else {
+                document.getElementById('loggedOutPrompt').style.display = 'block';
+                document.getElementById('loggedInContent').style.display = 'none';
+                document.getElementById('balanceDisplay').style.display = 'none';
+                
+                let socialHTML = `
+                    <div class="social-links" style="margin-right: 12px;">
+                        <a href="https://day-ps.github.io/dashboard/" class="social-link dashboard" title="Dashboard">📊</a>
+                        <a href="https://discord.com/invite/52fSZkWcPs" class="social-link discord" title="Discord">💬</a>
+                        <a href="https://www.youtube.com/" class="social-link youtube" title="YouTube">▶️</a>
+                    </div>
+                `;
+                
+                document.getElementById('authSection').innerHTML = socialHTML + `<button class="btn btn-green" onclick="showAuthModal()">Login / Register</button><button class="btn btn-gold" onclick="showAdminLogin()">Admin</button>`;
+            }
+        }
+
+        function updateBalanceDisplay() { document.getElementById('balanceAmount').textContent = balance.toFixed(2); }
+        function updateBalance(amount) { 
+            balance += amount; 
+            if (currentUser) {
+                currentUser.balance = balance;
+                saveToStorage();
+            }
+            updateBalanceDisplay(); 
+        }
+
+        // ==================== NAVIGATION ====================
+        function showView(viewName) {
+            if (viewName !== 'lobby' && !currentUser) { alert('Please login first!'); return; }
+            document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+            document.getElementById(viewName).classList.add('active');
+            if (viewName === 'roulette') { initRoulette(); renderWheelNumbers(); }
+            if (viewName === 'cases') { renderCases(); updateMyCasesStats(); }
+            if (viewName === 'blackjack') { bjReset(); }
+        }
+
+        function switchCaseTab(tab) {
+            document.querySelectorAll('.case-tab').forEach(t => t.classList.remove('active'));
+            event.target.classList.add('active');
+            if (tab === 'all') {
+                document.getElementById('allCasesTab').style.display = 'block';
+                document.getElementById('myCasesTab').style.display = 'none';
+                document.getElementById('createCaseBtn').style.display = 'none';
+            } else {
+                document.getElementById('allCasesTab').style.display = 'none';
+                document.getElementById('myCasesTab').style.display = 'block';
+                document.getElementById('createCaseBtn').style.display = 'inline-flex';
+                updateMyCasesStats();
+            }
+            renderCases();
+        }
+                // ==================== CASE MANAGEMENT ====================
+        function calculateCasePrice(items) {
+            if (items.length === 0) return 0;
+            let expectedValue = 0;
+            for (let item of items) {
+                const itemData = ITEMS_DB.find(i => i.name === item.name);
+                if (itemData) expectedValue += itemData.price * (item.chance / 100);
+            }
+            return Math.round((expectedValue * 1.05 + 0.01) * 100) / 100;
+        }
+
+        function openCreateCaseModal() {
+            if (!currentUser) return;
+            const userCases = cases.filter(c => c.ownerId === currentUser.id);
+            if (userCases.length >= MAX_CASES_PER_USER) { alert('You can only create up to ' + MAX_CASES_PER_USER + ' cases!'); return; }
+            editingCaseId = null; currentCaseItems = [];
+            document.getElementById('modalTitle').textContent = 'Create New Case';
+            document.getElementById('caseNameInput').value = '';
+            renderItemsList(); updateCasePreview();
+            document.getElementById('caseModal').classList.add('active');
+        }
+
+        function openEditCaseModal(caseId) {
+            const caseData = cases.find(c => c.id === caseId);
+            if (!caseData) return;
+            if (caseData.ownerId !== currentUser.id && !currentUser.isAdmin) { alert('You can only edit your own cases!'); return; }
+            editingCaseId = caseId; currentCaseItems = [...caseData.items];
+            document.getElementById('modalTitle').textContent = 'Edit Case';
+            document.getElementById('caseNameInput').value = caseData.name;
+            renderItemsList(); updateCasePreview();
+            document.getElementById('caseModal').classList.add('active');
+        }
+
+        function closeCaseModal() { document.getElementById('caseModal').classList.remove('active'); editingCaseId = null; currentCaseItems = []; }
+
+        function renderItemsList() {
+            const container = document.getElementById('itemsList');
+            if (currentCaseItems.length === 0) { container.innerHTML = '<p style="color: var(--text-secondary); text-align: center; padding: 20px;">No items added yet. Click "Add Item" below.</p>'; return; }
+            let html = '';
+            currentCaseItems.forEach((item, index) => {
+                const itemData = ITEMS_DB.find(i => i.name === item.name);
+                html += `<div class="item-row"><img src="${itemData ? itemData.png : ''}" alt="${item.name}" style="width: 32px; height: 32px;" onerror="this.style.display='none'"><span style="font-weight: 600;">${item.name}</span><span style="color: var(--dl-cyan); font-size: 12px;">${itemData ? itemData.price.toFixed(2) : '0.00'} DL</span><input type="number" min="0.001" max="99" step="0.001" value="${item.chance}" onchange="updateItemChance(${index}, this.value)" style="width: 80px;"><button onclick="removeItemFromCase(${index})" style="background: var(--accent-red); color: white; border: none; border-radius: 4px; cursor: pointer;">×</button></div>`;
+            });
+            container.innerHTML = html;
+        }
+
+        function showItemSelector() {
+            if (currentCaseItems.length >= 10) { alert('Maximum 10 items per case!'); return; }
+            document.getElementById('itemSelectorModal').classList.add('active');
+            document.getElementById('itemSearch').value = '';
+            renderItemSelector();
+        }
+
+        function closeItemSelector() {
+            document.getElementById('itemSelectorModal').classList.remove('active');
+        }
+
+        function renderItemSelector(filter = '') {
+            const container = document.getElementById('itemSelectorContent');
+            const filterLower = filter.toLowerCase();
+            
+            let items = ITEMS_DB;
+            if (filter) {
+                items = ITEMS_DB.filter(item => item.name.toLowerCase().includes(filterLower));
+            }
+            
+            items = items.filter(item => !currentCaseItems.find(ci => ci.name === item.name));
+            
+            if (items.length === 0) {
+                container.innerHTML = '<p style="color: var(--text-secondary); text-align: center; padding: 20px;">No items found.</p>';
+                return;
+            }
+            
+            let html = '<div class="item-selector-grid">';
+            items.forEach(item => {
+                html += `<div class="item-selector-item" onclick="selectItemForCase('${item.name.replace(/'/g, "\\'")}')">
+                    <img src="${item.png}" alt="${item.name}" onerror="this.src='data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%2250%22 height=%2250%22><rect width=%2250%22 height=%2250%22 fill=%22%23374151%22/><text x=%2225%22 y=%2225%22 text-anchor=%22middle%22 dy=%22.3em%22 fill=%22%239ca3af%22 font-size=%2220%22>📦</text></svg>'">
+                    <span class="item-name">${item.name}</span>
+                    <span class="item-price">${item.price.toFixed(2)} DL</span>
+                </div>`;
+            });
+            html += '</div>';
+            container.innerHTML = html;
+        }
+
+        function filterItems() {
+            const search = document.getElementById('itemSearch').value;
+            renderItemSelector(search);
+        }
+
+        function selectItemForCase(itemName) {
+            const decodedName = itemName.replace(/\\'/g, "'");
+            const selectedItem = ITEMS_DB.find(i => i.name === decodedName);
+            if (!selectedItem) return;
+            if (currentCaseItems.find(i => i.name === selectedItem.name)) { alert('This item is already in the case!'); return; }
+            currentCaseItems.push({ name: decodedName, chance: 10.0 });
+            closeItemSelector();
+            renderItemsList(); 
+            updateCasePreview();
+        }
+
+        function removeItemFromCase(index) { currentCaseItems.splice(index, 1); renderItemsList(); updateCasePreview(); }
+        function updateItemChance(index, value) { let chance = parseFloat(value); if (chance < 0.001) chance = 0.001; if (chance > 99) chance = 99; currentCaseItems[index].chance = chance; renderItemsList(); updateCasePreview(); }
+
+        function updateCasePreview() {
+            const previewContainer = document.getElementById('caseItemsPreview');
+            const priceDisplay = document.getElementById('calculatedPrice');
+            if (currentCaseItems.length === 0) { previewContainer.innerHTML = '<p style="color: var(--text-secondary); text-align: center; padding: 20px;">Add items to see preview</p>'; priceDisplay.textContent = '0.00 DL'; return; }
+            const totalChance = currentCaseItems.reduce((sum, item) => sum + item.chance, 0);
+            const isValid = Math.abs(totalChance - 100) < 0.01;
+            let html = '<div style="display: grid; gap: 8px;">';
+            currentCaseItems.forEach(item => {
+                const itemData = ITEMS_DB.find(i => i.name === item.name);
+                const rarityColor = item.chance < 1 ? '#8b5cf6' : item.chance < 10 ? '#3b82f6' : '#9ca3af';
+                html += `<div style="display: flex; align-items: center; gap: 12px; padding: 8px; background: var(--bg-dark); border-radius: 6px;"><img src="${itemData ? itemData.png : ''}" style="width: 32px; height: 32px;" onerror="this.style.display='none'"><span style="flex: 1;">${item.name}</span><span style="color: ${rarityColor}; font-weight: 600;">${item.chance.toFixed(3)}%</span><span style="color: var(--dl-cyan);">${itemData ? itemData.price.toFixed(2) : '0.00'} DL</span></div>`;
+            });
+            html += '</div>';
+            if (!isValid) html += `<p style="color: var(--accent-red); text-align: center; margin-top: 12px;">Total chance must equal 100% (currently ${totalChance.toFixed(3)}%)</p>`;
+            previewContainer.innerHTML = html;
+            priceDisplay.textContent = calculateCasePrice(currentCaseItems).toFixed(2) + ' DL';
+        }
+
+        function saveCase() {
+            const name = document.getElementById('caseNameInput').value.trim();
+            if (!name) { alert('Please enter a case name!'); return; }
+            if (currentCaseItems.length < 2) { alert('Add at least 2 items to the case!'); return; }
+            const totalChance = currentCaseItems.reduce((sum, item) => sum + item.chance, 0);
+            if (Math.abs(totalChance - 100) > 0.01) { alert('Total chance must equal exactly 100%! Currently: ' + totalChance.toFixed(3) + '%'); return; }
+            const price = calculateCasePrice(currentCaseItems);
+            if (editingCaseId) {
+                const caseIndex = cases.findIndex(c => c.id === editingCaseId);
+                if (caseIndex >= 0) { cases[caseIndex].name = name; cases[caseIndex].items = [...currentCaseItems]; cases[caseIndex].price = price; cases[caseIndex].updatedAt = Date.now(); }
+            } else {
+                const newCase = { id: 'case_' + Date.now(), name: name, ownerId: currentUser.id, ownerName: currentUser.username, items: [...currentCaseItems], price: price, totalOpens: 0, pendingEarnings: 0, totalEarned: 0, createdAt: Date.now(), updatedAt: Date.now() };
+                cases.push(newCase);
+                currentUser.casesCreated = (currentUser.casesCreated || 0) + 1;
+            }
+            saveToStorage(); closeCaseModal(); renderCases(); updateMyCasesStats();
+        }
+
+        function deleteCase(caseId) {
+            const caseData = cases.find(c => c.id === caseId);
+            if (!caseData) return;
+            if (caseData.ownerId !== currentUser.id && !currentUser.isAdmin) { alert('You can only delete your own cases!'); return; }
+            if (!confirm('Are you sure you want to delete this case?')) return;
+            cases = cases.filter(c => c.id !== caseId);
+            if (caseData.ownerId === currentUser.id) currentUser.casesCreated = Math.max(0, (currentUser.casesCreated || 0) - 1);
+            saveToStorage(); renderCases(); updateMyCasesStats();
+        }
+
+        function renderCases() {
+            const allContainer = document.getElementById('allCasesGrid');
+            const myContainer = document.getElementById('myCasesGrid');
+            if (cases.length === 0) {
+                allContainer.innerHTML = '<p style="color: var(--text-secondary); text-align: center; padding: 40px;">No cases created yet. Be the first to create one!</p>';
+                myContainer.innerHTML = '<p style="color: var(--text-secondary); text-align: center; padding: 40px;">You haven\'t created any cases yet.</p>';
+                return;
+            }
+            allContainer.innerHTML = cases.map(caseData => createCaseCard(caseData, false)).join('');
+            const myCases = cases.filter(c => c.ownerId === currentUser.id);
+            myContainer.innerHTML = myCases.length === 0 ? '<p style="color: var(--text-secondary); text-align: center; padding: 40px;">You haven\'t created any cases yet.</p>' : myCases.map(caseData => createCaseCard(caseData, true)).join('');
+        }
+
+        function createCaseCard(caseData, isMyCase) {
+            const canEdit = caseData.ownerId === currentUser.id || currentUser.isAdmin;
+            const ownerCut = (caseData.price * OWNER_CUT_PERCENTAGE / 100).toFixed(4);
+            return `<div class="case-card-new"><div class="case-header"><div class="case-icon-new">📦</div><div class="case-info"><h3>${caseData.name}</h3><p>by ${caseData.ownerName} ${caseData.ownerId === currentUser.id ? '(You)' : ''}</p></div></div><div class="case-price-new">${caseData.price.toFixed(2)} DL</div><div class="case-stats"><span>📦 ${caseData.items.length} items</span><span>🎲 ${caseData.totalOpens || 0} opens</span></div>${isMyCase ? `<div class="case-stats" style="margin-bottom: 12px;"><span>💰 ${(caseData.pendingEarnings || 0).toFixed(4)} DL pending</span><span>📈 ${(caseData.totalEarned || 0).toFixed(4)} DL earned</span></div><div style="font-size: 11px; color: var(--text-secondary); margin-bottom: 12px;">You earn ${ownerCut} DL per open (0.1%)</div>` : ''}<div class="case-actions"><button class="btn-open-case" onclick="startOpeningCase('${caseData.id}')">Open</button>${canEdit ? `<button class="btn-edit" onclick="openEditCaseModal('${caseData.id}')">Edit</button>` : ''}${canEdit ? `<button class="btn-delete" onclick="deleteCase('${caseData.id}')">Delete</button>` : ''}${isMyCase && (caseData.pendingEarnings || 0) > 0 ? `<button class="btn-claim" onclick="claimEarnings('${caseData.id}')">Claim</button>` : ''}</div></div>`;
+        }
+
+        function updateMyCasesStats() {
+            if (!currentUser) return;
+            const myCases = cases.filter(c => c.ownerId === currentUser.id);
+            const totalOpens = myCases.reduce((sum, c) => sum + (c.totalOpens || 0), 0);
+            const pendingEarnings = myCases.reduce((sum, c) => sum + (c.pendingEarnings || 0), 0);
+            const totalEarned = myCases.reduce((sum, c) => sum + (c.totalEarned || 0), 0);
+            document.getElementById('totalCasesCreated').textContent = myCases.length + '/' + MAX_CASES_PER_USER;
+            document.getElementById('totalOpens').textContent = totalOpens;
+            document.getElementById('pendingEarnings').textContent = pendingEarnings.toFixed(4);
+            document.getElementById('totalEarned').textContent = totalEarned.toFixed(4);
+        }
+
+        function claimEarnings(caseId) {
+            const caseData = cases.find(c => c.id === caseId);
+            if (!caseData || caseData.ownerId !== currentUser.id) return;
+            const earnings = caseData.pendingEarnings || 0;
+            if (earnings <= 0) { alert('No earnings to claim!'); return; }
+            updateBalance(earnings);
+            caseData.pendingEarnings = 0;
+            caseData.totalEarned = (caseData.totalEarned || 0) + earnings;
+            currentUser.pendingEarnings = (currentUser.pendingEarnings || 0) - earnings;
+            currentUser.totalEarned = (currentUser.totalEarned || 0) + earnings;
+            saveToStorage(); renderCases(); updateMyCasesStats();
+            alert(`Claimed ${earnings.toFixed(4)} DL!`);
+        }
+                // ==================== FIXED CASE OPENING ====================
+        let caseAnimationId = null;
+        let caseIsSpinning = false;
+        
+        function startOpeningCase(caseId) {
+            const caseData = cases.find(c => c.id === caseId);
+            if (!caseData) return;
+            if (balance < caseData.price) { alert('Insufficient balance! You need ' + caseData.price.toFixed(2) + ' DL'); return; }
+            openingCaseId = caseId;
+            document.getElementById('openingCaseName').textContent = '📦 Opening: ' + caseData.name;
+            document.getElementById('openingCasePrice').textContent = caseData.price.toFixed(2) + ' DL';
+            document.getElementById('caseOpeningResult').innerHTML = '';
+            document.getElementById('openCaseSpinBtn').disabled = false;
+            document.getElementById('openCaseSpinBtn').textContent = 'OPEN CASE';
+            
+            // Clear any existing animation
+            if (caseAnimationId) {
+                cancelAnimationFrame(caseAnimationId);
+                caseAnimationId = null;
+            }
+            caseIsSpinning = false;
+            
+            // Reset roulette
+            const roulette = document.getElementById('caseRoulette');
+            roulette.innerHTML = '';
+            roulette.style.transform = 'translateX(0px)';
+            
+            showView('caseOpening');
+        }
+
+        // Helper function to get rarity color based on chance
+        function getRarityColor(chance) {
+            if (chance <= 0.5) return '#ef4444'; // Legendary - Red
+            if (chance <= 2) return '#8b5cf6';   // Epic - Purple  
+            if (chance <= 5) return '#3b82f6';   // Rare - Blue
+            if (chance <= 15) return '#10b981';  // Uncommon - Green
+            return '#9ca3af';                     // Common - Gray
+        }
+
+        function spinCase() {
+            const caseData = cases.find(c => c.id === openingCaseId);
+            if (!caseData || caseIsSpinning) return;
+            
+            const btn = document.getElementById('openCaseSpinBtn');
+            btn.disabled = true;
+            btn.textContent = 'OPENING...';
+            updateBalance(-caseData.price);
+            
+            // Determine winner immediately based on probability
+            const roll = Math.random() * 100;
+            let cumulative = 0;
+            let winningItem = caseData.items[0];
+            let winningIndex = 0;
+            
+            for (let i = 0; i < caseData.items.length; i++) {
+                cumulative += caseData.items[i].chance;
+                if (roll <= cumulative) { 
+                    winningItem = caseData.items[i]; 
+                    winningIndex = i;
+                    break; 
+                }
+            }
+            
+            const winningItemData = ITEMS_DB.find(i => i.name === winningItem.name);
+            const winningRarityColor = getRarityColor(winningItem.chance);
+            
+            // Generate items for the roulette - organized by rarity
+            const roulette = document.getElementById('caseRoulette');
+            roulette.innerHTML = '';
+            
+            const itemWidth = 136; // 120px + 16px gap
+            const containerWidth = 900;
+            const centerOffset = (containerWidth / 2) - (itemWidth / 2);
+            
+            // Sort case items by rarity (highest chance first = common, lowest = rare)
+            const sortedItems = [...caseData.items].sort((a, b) => b.chance - a.chance);
+            
+            // Create 60 items with proper rarity distribution
+            const items = [];
+            
+            // Fill with items based on their actual probabilities
+            for (let i = 0; i < 60; i++) {
+                // Pick random item based on actual chances
+                const rand = Math.random() * 100;
+                let cum = 0;
+                let selectedItem = caseData.items[0];
+                
+                for (let item of caseData.items) {
+                    cum += item.chance;
+                    if (rand <= cum) {
+                        selectedItem = item;
+                        break;
+                    }
+                }
+                
+                const itemData = ITEMS_DB.find(it => it.name === selectedItem.name);
+                items.push({ 
+                    name: selectedItem.name, 
+                    png: itemData ? itemData.png : '', 
+                    price: itemData ? itemData.price : 0,
+                    chance: selectedItem.chance,
+                    rarityColor: getRarityColor(selectedItem.chance),
+                    isWinner: false
+                });
+            }
+            
+            // Place winner at position 45 (visible in center after spin)
+            const winnerPosition = 45;
+            items[winnerPosition] = { 
+                name: winningItem.name, 
+                png: winningItemData ? winningItemData.png : '', 
+                price: winningItemData ? winningItemData.price : 0,
+                chance: winningItem.chance,
+                rarityColor: winningRarityColor,
+                isWinner: true
+            };
+            
+            // Render items with rarity colors
+            let html = '';
+            items.forEach((item, index) => {
+                const borderColor = item.isWinner ? 'var(--accent-gold)' : item.rarityColor;
+                const glowStyle = item.isWinner ? 'box-shadow: 0 0 30px rgba(245, 158, 11, 0.5);' : '';
+                
+                html += `<div class="roulette-item" id="rouletteItem_${index}" data-index="${index}" style="border-color: ${borderColor}; ${glowStyle}">
+                    <img src="${item.png}" alt="${item.name}" onerror="this.src='data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%2270%22 height=%2270%22><rect width=%2270%22 height=%2270%22 fill=%22%23374151%22/><text x=%2235%22 y=%2235%22 text-anchor=%22middle%22 dy=%22.3em%22 fill=%22%239ca3af%22 font-size=%2230%22>📦</text></svg>'">
+                    <span class="item-name" style="color: ${item.rarityColor};">${item.name}</span>
+                    <span class="item-price">${item.price.toFixed(2)} DL</span>
+                    <span style="font-size: 9px; color: ${item.rarityColor}; font-weight: 600;">${item.chance < 1 ? item.chance.toFixed(2) : item.chance.toFixed(1)}%</span>
+                </div>`;
+            });
+            roulette.innerHTML = html;
+            
+            // Calculate target position to center the winner
+            const targetPosition = -(winnerPosition * itemWidth) + centerOffset;
+            
+            // Animation variables
+            let position = 0;
+            let startTime = null;
+            const duration = 4000; // 4 seconds
+            
+            caseIsSpinning = true;
+            
+            function animate(currentTime) {
+                if (!caseIsSpinning) return;
+                
+                if (!startTime) startTime = currentTime;
+                const elapsed = currentTime - startTime;
+                const progress = Math.min(elapsed / duration, 1);
+                
+                // Ease-out cubic function for smooth deceleration
+                const easeOut = 1 - Math.pow(1 - progress, 3);
+                
+                position = targetPosition * easeOut;
+                roulette.style.transform = `translateX(${position}px)`;
+                
+                if (progress < 1) {
+                    caseAnimationId = requestAnimationFrame(animate);
+                } else {
+                    // Animation complete
+                    roulette.style.transform = `translateX(${targetPosition}px)`;
+                    caseIsSpinning = false;
+                    caseAnimationId = null;
+                    
+                    // Add winner class after stopping
+                    const winnerEl = document.getElementById(`rouletteItem_${winnerPosition}`);
+                    if (winnerEl) {
+                        winnerEl.classList.add('winner');
+                        winnerEl.style.borderColor = 'var(--accent-gold)';
+                        winnerEl.style.transform = 'scale(1.15)';
+                    }
+                    
+                    setTimeout(() => finalizeCaseOpening(winningItem, winningItemData, caseData), 800);
+                }
+            }
+            
+            caseAnimationId = requestAnimationFrame(animate);
+        }
+
+        function finalizeCaseOpening(winningItem, winningItemData, caseData) {
+            const profit = winningItemData.price - caseData.price;
+            const isWin = profit > 0;
+            caseData.totalOpens = (caseData.totalOpens || 0) + 1;
+            const ownerCut = caseData.price * OWNER_CUT_PERCENTAGE / 100;
+            caseData.pendingEarnings = (caseData.pendingEarnings || 0) + ownerCut;
+            
+            // Update owner earnings
+            const users = getAllUsers();
+            if (users[caseData.ownerId]) {
+                users[caseData.ownerId].pendingEarnings = (users[caseData.ownerId].pendingEarnings || 0) + ownerCut;
+                saveToStorage();
+            }
+            
+            const resultEl = document.getElementById('caseOpeningResult');
+            const rarityColor = getRarityColor(winningItem.chance);
+            const rarityText = winningItem.chance <= 0.5 ? 'LEGENDARY' : winningItem.chance <= 2 ? 'EPIC' : winningItem.chance <= 5 ? 'RARE' : winningItem.chance <= 15 ? 'UNCOMMON' : 'COMMON';
+            
+            resultEl.innerHTML = `<div style="font-size: 48px; margin-bottom: 16px;">${isWin ? '🎉' : '📦'}</div>
+                <div style="font-size: 14px; color: ${rarityColor}; font-weight: 700; margin-bottom: 8px; text-transform: uppercase; letter-spacing: 0.1em;">${rarityText}</div>
+                <div style="font-size: 24px; font-weight: 700; margin-bottom: 8px;">You won: ${winningItem.name}!</div>
+                <div style="font-size: 18px; color: ${isWin ? 'var(--accent-green)' : 'var(--text-secondary)'};">Value: ${winningItemData.price.toFixed(2)} DL ${isWin ? `(+${profit.toFixed(2)} DL profit)` : `(${profit.toFixed(2)} DL)`}</div>`;
+            resultEl.className = 'result-message ' + (isWin ? 'win' : 'push');
+            
+            document.getElementById('openCaseSpinBtn').textContent = 'OPEN AGAIN';
+            document.getElementById('openCaseSpinBtn').disabled = false;
+        }
+                // ==================== FIXED ROULETTE ====================
+        function initRoulette() {
+            const container = document.getElementById('rouletteNumbers');
+            container.innerHTML = '';
+            const zero = document.createElement('div');
+            zero.className = 'bet-option green';
+            zero.textContent = '0';
+            zero.dataset.num = '0';
+            zero.onclick = () => placeRouletteBet('num', 0);
+            container.appendChild(zero);
+            for (let i = 1; i <= 36; i++) {
+                const numData = rouletteNumbers.find(n => n.num === i);
+                const div = document.createElement('div');
+                div.className = `bet-option ${numData.color}`;
+                div.textContent = i;
+                div.dataset.num = i;
+                div.onclick = () => placeRouletteBet('num', i);
+                container.appendChild(div);
+            }
+            const outsideContainer = document.getElementById('rouletteOutside');
+            outsideContainer.innerHTML = `
+                <div class="outside-bet" data-type="red" onclick="placeRouletteBet('type', 'red')">🔴 Red (2x)</div>
+                <div class="outside-bet" data-type="black" onclick="placeRouletteBet('type', 'black')">⚫ Black (2x)</div>
+                <div class="outside-bet" data-type="even" onclick="placeRouletteBet('type', 'even')">Even (2x)</div>
+                <div class="outside-bet" data-type="odd" onclick="placeRouletteBet('type', 'odd')">Odd (2x)</div>
+                <div class="outside-bet" data-type="low" onclick="placeRouletteBet('type', 'low')">1-18 (2x)</div>
+                <div class="outside-bet" data-type="high" onclick="placeRouletteBet('type', 'high')">19-36 (2x)</div>
+            `;
+        }
+
+        // FIXED: Proper wheel rendering with correct number sequence
+        function renderWheelNumbers() {
+            const wheelInner = document.getElementById('wheelInner');
+            wheelInner.innerHTML = '';
+            
+            const segmentAngle = 360 / 37;
+            
+            // European roulette wheel sequence (clockwise from 0 at top)
+            const wheelSequence = [0, 32, 15, 19, 4, 21, 2, 25, 17, 34, 6, 27, 13, 36, 11, 30, 8, 23, 10, 5, 24, 16, 33, 1, 20, 14, 31, 9, 22, 18, 29, 7, 28, 12, 35, 3, 26];
+            
+            // Create SVG for proper wheel
+            let svgContent = '';
+            wheelSequence.forEach((num, index) => {
+                const numData = rouletteNumbers.find(n => n.num === num);
+                const startAngle = index * segmentAngle;
+                const endAngle = (index + 1) * segmentAngle;
+                
+                // Calculate path for segment
+                const x1 = 50 + 50 * Math.cos((startAngle - 90) * Math.PI / 180);
+                const y1 = 50 + 50 * Math.sin((startAngle - 90) * Math.PI / 180);
+                const x2 = 50 + 50 * Math.cos((endAngle - 90) * Math.PI / 180);
+                const y2 = 50 + 50 * Math.sin((endAngle - 90) * Math.PI / 180);
+                
+                const color = numData.color === 'red' ? '#dc2626' : numData.color === 'black' ? '#1f2937' : '#10b981';
+                
+                svgContent += `<path d="M50,50 L${x1},${y1} A50,50 0 0,1 ${x2},${y2} Z" fill="${color}" stroke="#0a0e1a" stroke-width="0.5"/>`;
+                
+                // Add number text
+                const textAngle = startAngle + segmentAngle / 2 - 90;
+                const textRadius = 42;
+                const tx = 50 + textRadius * Math.cos(textAngle * Math.PI / 180);
+                const ty = 50 + textRadius * Math.sin(textAngle * Math.PI / 180);
+                
+                svgContent += `<text x="${tx}" y="${ty}" text-anchor="middle" dominant-baseline="middle" fill="white" font-size="6" font-weight="bold" transform="rotate(${textAngle + 90}, ${tx}, ${ty})">${num}</text>`;
+            });
+            
+            wheelInner.innerHTML = `<svg viewBox="0 0 100 100" style="width: 100%; height: 100%;">${svgContent}</svg>`;
+        }
+
+        function placeRouletteBet(type, value) {
+            if (rouletteSpinning) return;
+            if (rouletteCurrentBet === 0) { alert('Select bet amount first'); return; }
+            const totalBets = Object.values(rouletteBets).reduce((a, b) => a + b, 0);
+            if (totalBets + rouletteCurrentBet > balance) { alert('Insufficient balance'); return; }
+            const key = type === 'num' ? `num_${value}` : `type_${value}`;
+            rouletteBets[key] = (rouletteBets[key] || 0) + rouletteCurrentBet;
+            updateRouletteBetDisplay();
+        }
+
+        function updateRouletteBetDisplay() {
+            document.querySelectorAll('.bet-option, .outside-bet').forEach(el => {
+                el.classList.remove('selected');
+                const existing = el.querySelector('.bet-amount');
+                if (existing) existing.remove();
+            });
+            let total = 0;
+            for (let [key, amount] of Object.entries(rouletteBets)) {
+                total += amount;
+                const [type, value] = key.split('_');
+                if (type === 'num') {
+                    const el = document.querySelector(`[data-num="${value}"]`);
+                    if (el) {
+                        el.classList.add('selected');
+                        const badge = document.createElement('span');
+                        badge.className = 'bet-amount';
+                        badge.textContent = amount.toFixed(1);
+                        el.appendChild(badge);
+                    }
+                } else {
+                    const el = document.querySelector(`[data-type="${value}"]`);
+                    if (el) {
+                        el.classList.add('selected');
+                        el.innerHTML = `${el.textContent.split('(')[0]}<span class="bet-amount" style="position: static; margin-left: 8px;">${amount.toFixed(1)}</span>`;
+                    }
+                }
+            }
+            document.getElementById('rouletteTotalBet').textContent = total.toFixed(2);
+        }
+
+        function clearRouletteBets() {
+            if (rouletteSpinning) return;
+            rouletteBets = {};
+            updateRouletteBetDisplay();
+        }
+
+        // FIXED: Proper roulette spin with reset
+        document.getElementById('spinBtn').onclick = function() {
+            if (rouletteSpinning) return;
+            const totalBet = Object.values(rouletteBets).reduce((a, b) => a + b, 0);
+            if (totalBet === 0) { alert('Place a bet first'); return; }
+            rouletteSpinning = true;
+            this.disabled = true;
+            document.getElementById('rouletteResult').textContent = '';
+            updateBalance(-totalBet);
+            
+            // Determine winning number
+            const winningIndex = Math.floor(Math.random() * 37);
+            const winningData = rouletteNumbers[winningIndex];
+            
+            // FIXED: Calculate rotation properly
+            // Wheel starts at 0 (0 at top). Each segment is 360/37 = 9.73 degrees
+            // To land on a number, we rotate so that number comes to top (0 degrees)
+            const segmentAngle = 360 / 37;
+            
+            // The wheel needs to rotate so the winning number is at the top (where pointer is)
+            // Current position of winning number is at winningIndex * segmentAngle
+            // We need to rotate by -(winningIndex * segmentAngle) to bring it to top
+            // But we add extra full rotations for effect
+            
+            const extraSpins = 5; // Minimum 5 full rotations
+            const targetRotation = -(winningIndex * segmentAngle) - (extraSpins * 360);
+            
+            // Ensure we always rotate in negative direction (clockwise visually)
+            // and accumulate rotation properly
+            const currentRotation = wheelRotation || 0;
+            const newRotation = currentRotation + targetRotation - 360; // Extra buffer
+            
+            const wheel = document.getElementById('rouletteWheel');
+            wheel.style.transition = 'transform 4s cubic-bezier(0.17, 0.67, 0.12, 0.99)';
+            wheel.style.transform = `rotate(${newRotation}deg)`;
+            wheelRotation = newRotation;
+            
+            setTimeout(() => resolveRoulette(winningData.num, winningData.color), 4000);
+        };
+
+        function resolveRoulette(winningNum, winningColor) {
+            let winAmount = 0, totalBet = 0, maxMultiplier = 0;
+            for (let [key, amount] of Object.entries(rouletteBets)) {
+                totalBet += amount;
+                const [type, value] = key.split('_');
+                let won = false, multiplier = 0;
+                if (type === 'num') {
+                    if (parseInt(value) === winningNum) { won = true; multiplier = 35; }
+                } else {
+                    switch(value) {
+                        case 'red': if (winningColor === 'red') { won = true; multiplier = 2; } break;
+                        case 'black': if (winningColor === 'black') { won = true; multiplier = 2; } break;
+                        case 'even': if (winningNum !== 0 && winningNum % 2 === 0) { won = true; multiplier = 2; } break;
+                        case 'odd': if (winningNum % 2 === 1) { won = true; multiplier = 2; } break;
+                        case 'low': if (winningNum >= 1 && winningNum <= 18) { won = true; multiplier = 2; } break;
+                        case 'high': if (winningNum >= 19 && winningNum <= 36) { won = true; multiplier = 2; } break;
+                    }
+                }
+                if (won) {
+                    const thisWin = amount * multiplier;
+                    winAmount += thisWin;
+                    if (multiplier > maxMultiplier) maxMultiplier = multiplier;
+                }
+            }
+            const resultEl = document.getElementById('rouletteResult');
+            if (winAmount > 0) {
+                resultEl.innerHTML = `🎉 ${winningNum} ${winningColor.toUpperCase()}! Won ${winAmount.toFixed(2)} DL <span class="multiplier-tag">${maxMultiplier}x</span>`;
+                resultEl.style.color = 'var(--accent-green)';
+                updateBalance(winAmount);
+            } else {
+                resultEl.innerHTML = `💔 ${winningNum} ${winningColor.toUpperCase()}! Lost ${totalBet.toFixed(2)} DL`;
+                resultEl.style.color = 'var(--accent-red)';
+            }
+            rouletteBets = {};
+            updateRouletteBetDisplay();
+            rouletteSpinning = false;
+            document.getElementById('spinBtn').disabled = false;
+        }
+
+        document.querySelectorAll('.roulette-bet').forEach(btn => {
+            btn.addEventListener('click', function() {
+                document.querySelectorAll('.roulette-bet').forEach(b => b.classList.remove('active'));
+                this.classList.add('active');
+                rouletteCurrentBet = parseFloat(this.dataset.amount);
+            });
+        });
+                // ==================== FIXED BLACKJACK ====================
+        function createDeck() {
+            bjDeck = [];
+            for (let suit of suits) for (let value of values) bjDeck.push({ suit, value });
+            for (let i = bjDeck.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [bjDeck[i], bjDeck[j]] = [bjDeck[j], bjDeck[i]]; }
+        }
+
+        function getCardValue(card) { if (['J', 'Q', 'K'].includes(card.value)) return 10; if (card.value === 'A') return 11; return parseInt(card.value); }
+
+        function calculateScore(hand) {
+            let score = 0, aces = 0;
+            for (let card of hand) { score += getCardValue(card); if (card.value === 'A') aces++; }
+            while (score > 21 && aces > 0) { score -= 10; aces--; }
+            return score;
+        }
+
+        function renderCard(card, hidden = false) {
+            if (hidden) return '<div class="card hidden"></div>';
+            const isRed = card.suit === '♥' || card.suit === '♦';
+            const colorClass = isRed ? 'red' : 'black';
+            return `<div class="card"><div class="card-top ${colorClass}">${card.value}${card.suit}</div><div class="card-center ${colorClass}">${card.suit}</div><div class="card-bottom ${colorClass}">${card.value}${card.suit}</div></div>`;
+        }
+
+        function updateBJDisplay() {
+            const pScore = calculateScore(bjPlayerHand), dScore = calculateScore(bjDealerHand);
+            document.getElementById('playerCards').innerHTML = bjPlayerHand.map(c => renderCard(c)).join('');
+            document.getElementById('playerScore').textContent = `Score: ${pScore}`;
+            if (bjGameActive) {
+                document.getElementById('dealerCards').innerHTML = renderCard(bjDealerHand[0]) + renderCard(bjDealerHand[1], true);
+                document.getElementById('dealerScore').textContent = 'Score: ?';
+            } else {
+                document.getElementById('dealerCards').innerHTML = bjDealerHand.map(c => renderCard(c)).join('');
+                document.getElementById('dealerScore').textContent = `Score: ${dScore}`;
+            }
+        }
+
+        function updateBetDisplay() {
+            const display = document.getElementById('currentBetDisplay');
+            const amountDisplay = document.getElementById('betAmountDisplay');
+            if (bjCurrentBet > 0) {
+                display.style.display = 'block';
+                amountDisplay.textContent = bjCurrentBet.toFixed(2) + ' DL';
+            } else {
+                display.style.display = 'none';
+            }
+        }
+
+        function bjDeal() {
+            if (bjCurrentBet === 0) { alert('Select bet amount'); return; }
+            if (bjCurrentBet > balance) { alert('Insufficient balance'); return; }
+            bjOriginalBet = bjCurrentBet;
+            bjDoubledDown = false;
+            createDeck();
+            bjPlayerHand = [bjDeck.pop(), bjDeck.pop()];
+            bjDealerHand = [bjDeck.pop(), bjDeck.pop()];
+            bjGameActive = true;
+            updateBalance(-bjCurrentBet);
+            updateBetDisplay();
+            document.querySelectorAll('#bjBetSection .bet-btn').forEach(b => b.disabled = true);
+            document.getElementById('bjResult').innerHTML = '';
+            document.getElementById('bjActions').innerHTML = `<button class="game-btn btn-hit" onclick="bjHit()">Hit</button><button class="game-btn btn-stand" onclick="bjStand()">Stand</button><button class="game-btn btn-double" onclick="bjDouble()">Double</button>`;
+            updateBJDisplay();
+            if (calculateScore(bjPlayerHand) === 21) bjEndGame('blackjack');
+        }
+
+        function bjHit() {
+            bjPlayerHand.push(bjDeck.pop());
+            updateBJDisplay();
+            if (calculateScore(bjPlayerHand) > 21) bjEndGame('bust');
+        }
+
+        function bjStand() {
+            bjGameActive = false;
+            while (calculateScore(bjDealerHand) < 17) bjDealerHand.push(bjDeck.pop());
+            updateBJDisplay();
+            bjDetermineWinner();
+        }
+
+        // FIXED: Double down now properly doubles the bet and pays correctly
+        function bjDouble() {
+            if (bjOriginalBet > balance) { alert('Insufficient balance to double'); return; }
+            // Double the bet by deducting original bet amount again
+            updateBalance(-bjOriginalBet);
+            bjCurrentBet = bjOriginalBet * 2; // Total bet is now 2x original
+            bjDoubledDown = true;
+            bjPlayerHand.push(bjDeck.pop());
+            updateBJDisplay();
+            updateBetDisplay();
+            if (calculateScore(bjPlayerHand) > 21) bjEndGame('bust');
+            else bjStand();
+        }
+
+        function bjDetermineWinner() {
+            const pScore = calculateScore(bjPlayerHand), dScore = calculateScore(bjDealerHand);
+            if (dScore > 21) bjEndGame('dealerBust');
+            else if (pScore > dScore) bjEndGame('win');
+            else if (pScore < dScore) bjEndGame('lose');
+            else bjEndGame('push');
+        }
+
+        // FIXED: Proper payout calculation for double down
+        function bjEndGame(result) {
+            bjGameActive = false;
+            updateBJDisplay();
+            let winAmount = 0, message = '';
+            const totalBet = bjCurrentBet; // This is either original or doubled
+            
+            switch(result) {
+                case 'blackjack': 
+                    // Blackjack pays 2.5x original bet (not doubled bet)
+                    winAmount = bjOriginalBet * 2.5; 
+                    message = `🎉 BLACKJACK! <span class="multiplier-tag">2.5x</span>`; 
+                    break;
+                case 'dealerBust':
+                case 'win': 
+                    // Win pays 2x total bet (so doubled bet pays 4x original)
+                    winAmount = totalBet * 2;
+                    const displayMultiplier = bjDoubledDown ? '4x' : '2x';
+                    message = `🎉 You Win! <span class="multiplier-tag">${displayMultiplier}</span>`; 
+                    break;
+                case 'lose':
+                case 'bust': 
+                    message = '❌ You Lose'; 
+                    break;
+                case 'push': 
+                    winAmount = totalBet; // Return full bet including double
+                    message = '🤝 Push - Bet Returned'; 
+                    break;
+            }
+            
+            document.getElementById('bjResult').innerHTML = message + `<br><span style="font-size: 18px; margin-top: 8px; display: block;">${winAmount > 0 ? '+' : ''}${winAmount.toFixed(2)} DL</span>`;
+            document.getElementById('bjResult').className = 'result-message ' + (winAmount > totalBet ? 'win' : winAmount === totalBet ? 'push' : 'lose');
+            if (winAmount > 0) updateBalance(winAmount);
+            document.getElementById('bjActions').innerHTML = `<button class="game-btn btn-deal" onclick="bjReset()">Deal Again</button>`;
+        }
+
+        function bjReset() {
+            bjPlayerHand = []; bjDealerHand = []; bjCurrentBet = 0; bjOriginalBet = 0; bjDoubledDown = false;
+            document.getElementById('playerCards').innerHTML = '';
+            document.getElementById('dealerCards').innerHTML = '';
+            document.getElementById('playerScore').textContent = '';
+            document.getElementById('dealerScore').textContent = '';
+            document.getElementById('bjResult').innerHTML = '';
+            document.getElementById('bjActions').innerHTML = `<button class="game-btn btn-deal" id="bjDealBtn">Deal Cards</button>`;
+            document.querySelectorAll('#bjBetSection .bet-btn').forEach(b => {
+                b.classList.remove('active');
+                b.disabled = false;
+            });
+            updateBetDisplay();
+            document.getElementById('bjDealBtn').onclick = bjDeal;
+        }
+
+        document.querySelectorAll('#bjBetSection .bet-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                if (bjGameActive) return;
+                document.querySelectorAll('#bjBetSection .bet-btn').forEach(b => b.classList.remove('active'));
+                this.classList.add('active');
+                bjCurrentBet = parseFloat(this.dataset.amount);
+                updateBetDisplay();
+            });
+        });
+        document.getElementById('bjDealBtn').onclick = bjDeal;
+
+        // ==================== ADMIN PANEL ====================
+        function renderAdminPanel() {
+            const tbody = document.getElementById('adminUsersTable');
+            const users = getAllUsers();
+            let html = '';
+            Object.values(users).forEach(user => {
+                if (user.id === 'admin') return; // Skip admin user
+                const userCases = cases.filter(c => c.ownerId === user.id);
+                const totalOpens = userCases.reduce((sum, c) => sum + (c.totalOpens || 0), 0);
+                html += `<tr>
+                    <td>${user.id}</td>
+                    <td>${user.username}</td>
+                    <td>
+                        <div class="balance-adjust">
+                            <button class="btn-sub" onclick="adjustBalance('${user.id}', -1)">-1</button>
+                            <button class="btn-sub" onclick="adjustBalance('${user.id}', -10)">-10</button>
+                            <input type="number" class="balance-input" id="balance_${user.id}" value="${(user.balance || 0).toFixed(2)}" step="0.01" readonly>
+                            <button class="btn-add" onclick="adjustBalance('${user.id}', 1)">+1</button>
+                            <button class="btn-add" onclick="adjustBalance('${user.id}', 10)">+10</button>
+                            <button class="btn-add" onclick="adjustBalance('${user.id}', 100)">+100</button>
+                        </div>
+                    </td>
+                    <td>${userCases.length}</td>
+                    <td>${totalOpens}</td>
+                    <td><button class="btn btn-red" style="padding: 6px 12px; font-size: 12px;" onclick="deleteUser('${user.id}')">Delete</button></td>
+                </tr>`;
+            });
+            tbody.innerHTML = html;
+        }
+
+        function adjustBalance(userId, amount) {
+            const users = getAllUsers();
+            if (users[userId]) {
+                users[userId].balance = (users[userId].balance || 0) + amount;
+                if (users[userId].balance < 0) users[userId].balance = 0;
+                
+                if (currentUser && currentUser.id === userId) {
+                    balance = users[userId].balance;
+                    currentUser.balance = balance;
+                    updateBalanceDisplay();
+                }
+                
+                const data = { 
+                    users: users, 
+                    cases: cases, 
+                    timestamp: Date.now(),
+                    currentUserId: currentUser ? currentUser.id : null,
+                    isAdmin: isAdmin
+                };
+                localStorage.setItem('dbet_data', JSON.stringify(data));
+                renderAdminPanel();
+            }
+        }
+
+        function deleteUser(userId) {
+            if (!confirm('Are you sure you want to delete this user? All their cases will also be deleted!')) return;
+            const users = getAllUsers();
+            delete users[userId];
+            cases = cases.filter(c => c.ownerId !== userId);
+            
+            const data = { 
+                users: users, 
+                cases: cases, 
+                timestamp: Date.now(),
+                currentUserId: currentUser ? currentUser.id : null,
+                isAdmin: isAdmin
+            };
+            localStorage.setItem('dbet_data', JSON.stringify(data));
+            
+            renderAdminPanel();
+            renderCases();
+        }
+
+        // ==================== INITIALIZATION ====================
+        window.onload = function() {
+            loadFromStorage();
+            updateUI();
+            document.addEventListener('keydown', function(e) {
+                if (e.ctrlKey && e.shiftKey && e.key === 'A') {
+                    e.preventDefault();
+                    showAdminLogin();
+                }
+            });
+        };
+    </script>
+</body>
+</html>
