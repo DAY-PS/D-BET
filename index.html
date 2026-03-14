@@ -1,3 +1,6 @@
+Here's the updated HTML with a simplified case opening system - click a case 3 times to reveal the item, with case appearance selection using case1.png to case6.png:
+
+```html
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -71,10 +74,8 @@
         /* ROULETTE WHEEL */
         .roulette-container { display: flex; flex-direction: column; align-items: center; gap: 32px; }
         .wheel-container { position: relative; margin-bottom: 20px; width: 340px; height: 340px; }
-        .wheel { width: 320px; height: 320px; border-radius: 50%; border: 8px solid var(--accent-gold); box-shadow: 0 0 40px rgba(245, 158, 11, 0.3); position: absolute; top: 10px; left: 10px; transition: transform 4s cubic-bezier(0.17, 0.67, 0.12, 0.99); }
+        .wheel { width: 320px; height: 320px; border-radius: 50%; border: 8px solid var(--accent-gold); box-shadow: 0 0 40px rgba(245, 158, 11, 0.3); position: absolute; top: 10px; left: 10px; transition: transform 3s cubic-bezier(0.2, 0.9, 0.3, 1); }
         .wheel-inner { width: 100%; height: 100%; position: relative; border-radius: 50%; overflow: hidden; }
-        .wheel-number { position: absolute; width: 100%; height: 100%; display: flex; align-items: flex-start; justify-content: center; font-size: 14px; font-weight: 700; color: white; text-shadow: 0 1px 2px rgba(0,0,0,0.8); transform-origin: center; padding-top: 8px; }
-        .wheel-number span { display: block; transform: rotate(180deg); margin-top: 20px; }
         .wheel-center { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 60px; height: 60px; background: var(--accent-gold); border-radius: 50%; border: 4px solid var(--bg-panel); z-index: 10; }
         .wheel-pointer { position: absolute; top: -10px; left: 50%; transform: translateX(-50%); width: 0; height: 0; border-left: 15px solid transparent; border-right: 15px solid transparent; border-top: 30px solid var(--accent-gold); z-index: 20; filter: drop-shadow(0 4px 6px rgba(0,0,0,0.3)); }
         .roulette-result { text-align: center; font-size: 36px; font-weight: 800; min-height: 50px; }
@@ -99,11 +100,11 @@
         .case-tab:hover { background: var(--bg-hover); }
         .case-tab.active { background: var(--accent-purple); border-color: var(--accent-purple); }
         .create-case-btn { margin-left: auto; background: var(--accent-green); color: white; border: none; }
-        .cases-grid-new { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 20px; }
+        .cases-grid-new { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 20px; }
         .case-card-new { background: var(--bg-card); border: 2px solid var(--border-color); border-radius: 16px; padding: 20px; transition: all 0.3s; position: relative; }
         .case-card-new:hover { border-color: var(--accent-purple); transform: translateY(-4px); }
         .case-header { display: flex; align-items: center; gap: 12px; margin-bottom: 16px; }
-        .case-icon-new { width: 60px; height: 60px; background: linear-gradient(135deg, var(--accent-purple), #6d28d9); border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 30px; }
+        .case-icon-new { width: 60px; height: 60px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 30px; background-size: cover; background-position: center; }
         .case-info h3 { font-size: 18px; margin-bottom: 4px; }
         .case-info p { font-size: 12px; color: var(--text-secondary); }
         .case-price-new { font-size: 24px; font-weight: 800; color: var(--dl-cyan); margin-bottom: 12px; }
@@ -114,6 +115,74 @@
         .btn-edit { background: var(--accent-blue); color: white; }
         .btn-delete { background: var(--accent-red); color: white; }
         .btn-claim { background: var(--accent-gold); color: black; }
+        
+        /* Case Preview Page */
+        .case-preview-container { background: var(--bg-card); border-radius: 24px; padding: 32px; margin-top: 24px; }
+        .case-preview-header { text-align: center; margin-bottom: 32px; }
+        .case-preview-title { font-size: 32px; font-weight: 800; margin-bottom: 8px; }
+        .case-preview-price { font-size: 24px; color: var(--dl-cyan); font-weight: 700; }
+        .case-items-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 16px; margin: 32px 0; }
+        .case-preview-item { background: var(--bg-panel); border-radius: 12px; padding: 16px; text-align: center; border: 2px solid var(--border-color); }
+        .case-preview-item img { width: 80px; height: 80px; object-fit: contain; margin-bottom: 12px; }
+        .case-preview-item-name { font-weight: 600; font-size: 14px; margin-bottom: 4px; }
+        .case-preview-item-price { color: var(--dl-cyan); font-size: 14px; font-weight: 700; }
+        .case-preview-item-chance { font-size: 20px; font-weight: 800; margin: 8px 0; }
+        .rarity-legendary { color: #ef4444; }
+        .rarity-epic { color: #8b5cf6; }
+        .rarity-rare { color: #3b82f6; }
+        .rarity-uncommon { color: #10b981; }
+        .rarity-common { color: #9ca3af; }
+        .case-actions-preview { display: flex; justify-content: center; gap: 20px; margin-top: 32px; }
+        
+        /* Case Appearance Selector */
+        .appearance-selector { display: flex; gap: 16px; margin: 20px 0; justify-content: center; flex-wrap: wrap; }
+        .appearance-option { width: 80px; height: 80px; border-radius: 12px; cursor: pointer; border: 3px solid var(--border-color); transition: all 0.2s; background-size: cover; background-position: center; }
+        .appearance-option:hover { transform: scale(1.1); }
+        .appearance-option.selected { border-color: var(--accent-gold); transform: scale(1.1); box-shadow: 0 0 20px var(--accent-gold); }
+        
+        /* Case Opening Animation */
+        .case-opening-container { text-align: center; padding: 40px 0; }
+        .case-display { display: flex; flex-direction: column; align-items: center; gap: 30px; }
+        .case-image-container { position: relative; width: 300px; height: 300px; cursor: pointer; transition: transform 0.1s; }
+        .case-image-container.clicked { transform: scale(0.95); }
+        .case-image { width: 100%; height: 100%; background-size: contain; background-position: center; background-repeat: no-repeat; transition: all 0.3s; }
+        .click-counter { font-size: 48px; font-weight: 800; color: var(--accent-gold); text-shadow: 0 0 20px rgba(245, 158, 11, 0.5); }
+        .click-instruction { color: var(--text-secondary); font-size: 18px; margin-top: 10px; }
+        .case-result-item { margin-top: 40px; padding: 30px; background: var(--bg-panel); border-radius: 24px; border: 2px solid var(--border-color); }
+        .result-item-image { width: 120px; height: 120px; object-fit: contain; margin-bottom: 20px; }
+        .result-item-name { font-size: 28px; font-weight: 800; margin-bottom: 10px; }
+        .result-item-price { font-size: 24px; color: var(--dl-cyan); font-weight: 700; }
+        .open-again-btn { margin-top: 30px; padding: 16px 40px; font-size: 18px; }
+        
+        .admin-panel { background: var(--bg-card); border-radius: 16px; padding: 24px; }
+        .admin-table { width: 100%; border-collapse: collapse; }
+        .admin-table th, .admin-table td { padding: 12px; text-align: left; border-bottom: 1px solid var(--border-color); }
+        .admin-table th { font-weight: 600; color: var(--text-secondary); font-size: 12px; text-transform: uppercase; }
+        .balance-input { width: 100px; padding: 6px; background: var(--bg-dark); border: 1px solid var(--border-color); border-radius: 4px; color: var(--text-primary); text-align: center; }
+        .balance-adjust { display: flex; gap: 4px; align-items: center; }
+        .balance-adjust button { padding: 4px 8px; border: none; border-radius: 4px; cursor: pointer; font-weight: 600; font-size: 12px; }
+        .btn-add { background: var(--accent-green); color: white; }
+        .btn-sub { background: var(--accent-red); color: white; }
+        .admin-badge { display: inline-block; background: var(--accent-red); color: white; padding: 2px 8px; border-radius: 4px; font-size: 10px; font-weight: 700; margin-left: 8px; }
+        .my-cases-stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; margin-bottom: 24px; }
+        .stat-card { background: var(--bg-card); padding: 20px; border-radius: 12px; border: 1px solid var(--border-color); }
+        .stat-card h4 { font-size: 12px; color: var(--text-secondary); margin-bottom: 8px; text-transform: uppercase; }
+        .stat-card .value { font-size: 28px; font-weight: 800; color: var(--accent-green); }
+        .current-bet-display { text-align: center; padding: 12px; background: rgba(245, 158, 11, 0.1); border: 2px solid var(--accent-gold); border-radius: 12px; margin-bottom: 16px; }
+        .current-bet-display span { font-size: 14px; color: var(--text-secondary); }
+        .current-bet-display .bet-amount-display { font-size: 24px; font-weight: 800; color: var(--accent-gold); }
+        .auth-tabs { display: flex; gap: 8px; margin-bottom: 20px; }
+        .auth-tab { flex: 1; padding: 12px; background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 8px; color: var(--text-primary); font-weight: 600; cursor: pointer; transition: all 0.2s; }
+        .auth-tab.active { background: var(--accent-green); border-color: var(--accent-green); color: white; }
+        .auth-error { color: var(--accent-red); text-align: center; margin-top: 12px; font-size: 14px; }
+        .social-links { display: flex; gap: 12px; align-items: center; }
+        .social-link { width: 36px; height: 36px; border-radius: 8px; display: flex; align-items: center; justify-content: center; text-decoration: none; font-size: 18px; transition: all 0.2s; }
+        .social-link.dashboard { background: var(--accent-blue); color: white; }
+        .social-link.discord { background: #5865F2; color: white; }
+        .social-link.youtube { background: #FF0000; color: white; }
+        .social-link:hover { transform: scale(1.1); }
+        .watermark { position: fixed; bottom: 20px; right: 20px; font-size: 12px; color: var(--text-secondary); opacity: 0.7; z-index: 1000; pointer-events: none; font-weight: 500; }
+        .watermark a { color: var(--accent-green); text-decoration: none; pointer-events: auto; }
         .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.8); display: none; align-items: center; justify-content: center; z-index: 2000; padding: 20px; }
         .modal-overlay.active { display: flex; }
         .modal { background: var(--bg-panel); border-radius: 16px; max-width: 800px; width: 100%; max-height: 90vh; overflow-y: auto; }
@@ -130,8 +199,6 @@
         .add-item-btn { margin-top: 12px; width: 100%; padding: 12px; background: var(--bg-hover); border: 2px dashed var(--border-color); border-radius: 8px; color: var(--text-secondary); cursor: pointer; font-weight: 600; }
         .case-preview { background: var(--bg-card); padding: 16px; border-radius: 8px; margin-top: 20px; }
         .calculated-price { font-size: 32px; font-weight: 800; color: var(--accent-green); text-align: center; margin: 16px 0; }
-        
-        /* ITEM SELECTOR UI */
         .item-selector { max-height: 400px; overflow-y: auto; border: 1px solid var(--border-color); border-radius: 12px; padding: 16px; background: var(--bg-dark); }
         .item-selector-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 12px; }
         .item-selector-item { background: var(--bg-card); border: 2px solid var(--border-color); border-radius: 12px; padding: 12px; cursor: pointer; transition: all 0.2s; text-align: center; display: flex; flex-direction: column; align-items: center; gap: 8px; }
@@ -140,65 +207,6 @@
         .item-selector-item .item-name { font-size: 11px; font-weight: 600; color: var(--text-primary); }
         .item-selector-item .item-price { font-size: 12px; color: var(--dl-cyan); font-weight: 700; }
         .item-selector-search { width: 100%; padding: 12px 16px; background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 8px; color: var(--text-primary); font-size: 14px; margin-bottom: 16px; }
-        
-        /* CASE ROULETTE - Fixed animation */
-        .case-roulette-wrapper { position: relative; width: 100%; max-width: 900px; margin: 40px auto; overflow: hidden; padding: 20px 0; }
-        .case-roulette-container { position: relative; width: 100%; height: 180px; overflow: hidden; }
-        .case-roulette { display: flex; align-items: center; gap: 16px; position: absolute; left: 50%; will-change: transform; }
-        .roulette-item { min-width: 120px; height: 140px; background: var(--bg-card); border: 2px solid var(--border-color); border-radius: 16px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 6px; transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); padding: 12px; flex-shrink: 0; }
-        .roulette-item img { width: 70px; height: 70px; object-fit: contain; image-rendering: pixelated; transition: transform 0.3s ease; }
-        .roulette-item:hover img { transform: scale(1.1); }
-        .roulette-item.winner { border-color: var(--accent-gold); box-shadow: 0 0 50px rgba(245, 158, 11, 0.8), inset 0 0 20px rgba(245, 158, 11, 0.2); transform: scale(1.15); background: linear-gradient(135deg, var(--bg-card), rgba(245, 158, 11, 0.25)); z-index: 10; animation: winnerPulse 1s ease-in-out infinite; }
-        @keyframes winnerPulse { 0%, 100% { box-shadow: 0 0 50px rgba(245, 158, 11, 0.8), inset 0 0 20px rgba(245, 158, 11, 0.2); } 50% { box-shadow: 0 0 80px rgba(245, 158, 11, 1), inset 0 0 30px rgba(245, 158, 11, 0.3); } }
-        .roulette-item .item-name { font-size: 11px; font-weight: 600; text-align: center; color: var(--text-primary); }
-        .roulette-item .item-price { font-size: 10px; color: var(--dl-cyan); font-weight: 700; }
-        .roulette-item.winner .item-name { color: var(--accent-gold); font-size: 12px; font-weight: 700; }
-        .roulette-fade-left, .roulette-fade-right { position: absolute; top: 0; bottom: 0; width: 150px; pointer-events: none; z-index: 5; }
-        .roulette-fade-left { left: 0; background: linear-gradient(to right, var(--bg-dark) 0%, transparent 100%); }
-        .roulette-fade-right { right: 0; background: linear-gradient(to left, var(--bg-dark) 0%, transparent 100%); }
-        
-        /* RED ARROW INDICATOR */
-        .roulette-arrow { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 0; height: 0; border-left: 12px solid transparent; border-right: 12px solid transparent; border-top: 24px solid var(--accent-red); z-index: 100; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.5)); margin-top: -80px; }
-        .roulette-arrow::after { content: ''; position: absolute; top: -28px; left: -8px; width: 16px; height: 16px; background: var(--accent-red); border-radius: 50%; }
-        
-        .admin-panel { background: var(--bg-card); border-radius: 16px; padding: 24px; }
-        .admin-table { width: 100%; border-collapse: collapse; }
-        .admin-table th, .admin-table td { padding: 12px; text-align: left; border-bottom: 1px solid var(--border-color); }
-        .admin-table th { font-weight: 600; color: var(--text-secondary); font-size: 12px; text-transform: uppercase; }
-        .balance-input { width: 100px; padding: 6px; background: var(--bg-dark); border: 1px solid var(--border-color); border-radius: 4px; color: var(--text-primary); text-align: center; }
-        .balance-adjust { display: flex; gap: 4px; align-items: center; }
-        .balance-adjust button { padding: 4px 8px; border: none; border-radius: 4px; cursor: pointer; font-weight: 600; font-size: 12px; }
-        .btn-add { background: var(--accent-green); color: white; }
-        .btn-sub { background: var(--accent-red); color: white; }
-        .admin-badge { display: inline-block; background: var(--accent-red); color: white; padding: 2px 8px; border-radius: 4px; font-size: 10px; font-weight: 700; margin-left: 8px; }
-        .my-cases-stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; margin-bottom: 24px; }
-        .stat-card { background: var(--bg-card); padding: 20px; border-radius: 12px; border: 1px solid var(--border-color); }
-        .stat-card h4 { font-size: 12px; color: var(--text-secondary); margin-bottom: 8px; text-transform: uppercase; }
-        .stat-card .value { font-size: 28px; font-weight: 800; color: var(--accent-green); }
-        
-        /* CURRENT BET DISPLAY */
-        .current-bet-display { text-align: center; padding: 12px; background: rgba(245, 158, 11, 0.1); border: 2px solid var(--accent-gold); border-radius: 12px; margin-bottom: 16px; }
-        .current-bet-display span { font-size: 14px; color: var(--text-secondary); }
-        .current-bet-display .bet-amount-display { font-size: 24px; font-weight: 800; color: var(--accent-gold); }
-        
-        /* AUTH MODALS */
-        .auth-tabs { display: flex; gap: 8px; margin-bottom: 20px; }
-        .auth-tab { flex: 1; padding: 12px; background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 8px; color: var(--text-primary); font-weight: 600; cursor: pointer; transition: all 0.2s; }
-        .auth-tab.active { background: var(--accent-green); border-color: var(--accent-green); color: white; }
-        .auth-error { color: var(--accent-red); text-align: center; margin-top: 12px; font-size: 14px; }
-        
-        /* SOCIAL LINKS */
-        .social-links { display: flex; gap: 12px; align-items: center; }
-        .social-link { width: 36px; height: 36px; border-radius: 8px; display: flex; align-items: center; justify-content: center; text-decoration: none; font-size: 18px; transition: all 0.2s; }
-        .social-link.dashboard { background: var(--accent-blue); color: white; }
-        .social-link.discord { background: #5865F2; color: white; }
-        .social-link.youtube { background: #FF0000; color: white; }
-        .social-link:hover { transform: scale(1.1); }
-        
-        /* WATERMARK */
-        .watermark { position: fixed; bottom: 20px; right: 20px; font-size: 12px; color: var(--text-secondary); opacity: 0.7; z-index: 1000; pointer-events: none; font-weight: 500; }
-        .watermark a { color: var(--accent-green); text-decoration: none; pointer-events: auto; }
-        
         @media (max-width: 768px) { .balance-center { position: static; transform: none; order: 3; margin-top: 10px; } .header { flex-wrap: wrap; height: auto; padding: 12px; } }
     </style>
 <base target="_blank">
@@ -274,19 +282,27 @@
                 <div class="cases-grid-new" id="myCasesGrid"></div>
             </div>
         </div>
+        <div id="casePreview" class="view">
+            <div class="game-header"><button class="back-btn" onclick="showView('cases')">← Back</button><h1 class="game-title">📦 Case Preview</h1></div>
+            <div class="case-preview-container" id="casePreviewContainer"></div>
+        </div>
         <div id="caseOpening" class="view">
-            <div class="game-header"><button class="back-btn" onclick="showView('cases')">← Back</button><h1 class="game-title" id="openingCaseName">Opening Case</h1></div>
-            <div class="case-opening-container" style="text-align: center; padding: 40px 0;">
-                <div class="case-roulette-wrapper">
-                    <div class="roulette-arrow"></div>
-                    <div class="case-roulette-container">
-                        <div class="case-roulette" id="caseRoulette"></div>
+            <div class="game-header"><button class="back-btn" onclick="showView('casePreview')">← Back</button><h1 class="game-title" id="openingCaseName">Opening Case</h1></div>
+            <div class="case-opening-container">
+                <div class="case-display">
+                    <div class="case-price-new" id="openingCasePrice"></div>
+                    
+                    <div class="case-image-container" id="caseImageContainer" onclick="handleCaseClick()">
+                        <div class="case-image" id="caseImage" style="background-image: url('case1.png')"></div>
                     </div>
-                    <div class="roulette-fade-left"></div>
-                    <div class="roulette-fade-right"></div>
+                    
+                    <div class="click-counter" id="clickCounter">3</div>
+                    <div class="click-instruction" id="clickInstruction">Click the case to open (3 clicks)</div>
+                    
+                    <div id="caseResultArea" style="display: none;" class="case-result-item"></div>
+                    
+                    <button class="btn btn-green open-again-btn" id="openAgainBtn" onclick="resetCaseOpening()" style="display: none;">Open Again</button>
                 </div>
-                <div class="result-message" id="caseOpeningResult"></div>
-                <div class="game-controls"><div class="case-price-new" id="openingCasePrice"></div><button class="game-btn btn-deal" id="openCaseSpinBtn" onclick="spinCase()">OPEN CASE</button></div>
             </div>
         </div>
         <div id="adminPanel" class="view">
@@ -326,6 +342,19 @@
             <div class="modal-header"><h2 id="modalTitle">Create New Case</h2><button class="modal-close" onclick="closeCaseModal()">&times;</button></div>
             <div class="modal-body">
                 <div class="form-group"><label>Case Name</label><input type="text" id="caseNameInput" placeholder="Enter case name..." maxlength="30"></div>
+                
+                <div class="form-group">
+                    <label>Case Appearance</label>
+                    <div class="appearance-selector" id="appearanceSelector">
+                        <div class="appearance-option" data-appearance="1" style="background-image: url('case1.png')" onclick="selectAppearance(1)"></div>
+                        <div class="appearance-option" data-appearance="2" style="background-image: url('case2.png')" onclick="selectAppearance(2)"></div>
+                        <div class="appearance-option" data-appearance="3" style="background-image: url('case3.png')" onclick="selectAppearance(3)"></div>
+                        <div class="appearance-option" data-appearance="4" style="background-image: url('case4.png')" onclick="selectAppearance(4)"></div>
+                        <div class="appearance-option" data-appearance="5" style="background-image: url('case5.png')" onclick="selectAppearance(5)"></div>
+                        <div class="appearance-option" data-appearance="6" style="background-image: url('case6.png')" onclick="selectAppearance(6)"></div>
+                    </div>
+                </div>
+                
                 <div class="form-group"><label>Select Items</label><div class="items-list" id="itemsList"><p style="color: var(--text-secondary); text-align: center; padding: 20px;">No items added yet.</p></div><button class="add-item-btn" onclick="showItemSelector()">+ Add Item to Case</button></div>
                 <div class="case-preview"><h4>Case Preview & Pricing</h4><div id="caseItemsPreview"><p style="color: var(--text-secondary); text-align: center; padding: 20px;">Add items to see preview</p></div><div class="calculated-price" id="calculatedPrice">0.00 DL</div></div>
                 <div style="display: flex; gap: 12px; margin-top: 20px;"><button class="btn btn-outline" style="flex: 1;" onclick="closeCaseModal()">Cancel</button><button class="btn btn-green" style="flex: 1;" onclick="saveCase()">Save Case</button></div>
@@ -354,7 +383,8 @@
             </div>
         </div>
     </div>
-        <script>
+    
+    <script>
         // ==================== CONFIGURATION ====================
         const ADMIN_CREDENTIALS = { username: 'admin', password: 'Adm1n1strat0r' };
         const MAX_CASES_PER_USER = 5;
@@ -410,13 +440,18 @@
         let cases = [];
         let editingCaseId = null;
         let currentCaseItems = [];
+        let selectedAppearance = 1;
+        let previewCaseId = null;
         let openingCaseId = null;
+        let currentClicks = 0;
+        let maxClicks = 3;
+        let isOpening = false;
         
         // Blackjack state
         let bjDeck = [], bjPlayerHand = [], bjDealerHand = [], bjGameActive = false, bjCurrentBet = 0, bjOriginalBet = 0, bjDoubledDown = false;
         
         // Roulette state
-        let rouletteBets = {}, rouletteCurrentBet = 0, rouletteSpinning = false, wheelRotation = 0;
+        let rouletteBets = {}, rouletteCurrentBet = 0, rouletteSpinning = false;
 
         const suits = ['♠', '♥', '♦', '♣'], values = ['2', '3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K', 'A'];
         const rouletteNumbers = [
@@ -432,7 +467,7 @@
             {num: 26, color: 'black'}
         ];
 
-        // ==================== LOCAL STORAGE (FIXED) ====================
+        // ==================== LOCAL STORAGE ====================
         function saveToStorage() {
             try {
                 const users = getAllUsers();
@@ -447,10 +482,8 @@
                     isAdmin: isAdmin
                 };
                 localStorage.setItem('dbet_data', JSON.stringify(data));
-                console.log('Data saved successfully');
             } catch (e) {
                 console.error('Error saving to storage:', e);
-                alert('Error saving data. Storage might be full or disabled.');
             }
         }
 
@@ -460,16 +493,11 @@
                 if (data) {
                     const parsed = JSON.parse(data);
                     cases = parsed.cases || [];
-                    
-                    // Restore current user session - FIXED
                     if (parsed.currentUserId && parsed.users && parsed.users[parsed.currentUserId]) {
                         currentUser = parsed.users[parsed.currentUserId];
                         balance = currentUser.balance || 0;
                         isAdmin = currentUser.isAdmin || false;
-                        console.log('Session restored for user:', currentUser.username);
                     }
-                    
-                    console.log('Data loaded successfully:', parsed);
                     return parsed.users || {};
                 }
             } catch (e) {
@@ -491,19 +519,7 @@
             return {};
         }
 
-        function saveUser(user) {
-            const users = getAllUsers();
-            users[user.id] = user;
-            const data = { 
-                users: users, 
-                cases: cases, 
-                timestamp: Date.now(),
-                currentUserId: currentUser ? currentUser.id : null,
-                isAdmin: isAdmin
-            };
-            localStorage.setItem('dbet_data', JSON.stringify(data));
-        }
-                // ==================== AUTH ====================
+        // ==================== AUTH ====================
         function showAuthModal() {
             document.getElementById('authModal').classList.add('active');
             document.getElementById('authError').style.display = 'none';
@@ -558,7 +574,6 @@
             const users = getAllUsers();
             const usernameLower = username.toLowerCase();
             
-            // Check if username exists (case-insensitive)
             for (let userId in users) {
                 if (users[userId].username.toLowerCase() === usernameLower) {
                     showAuthError('Username already exists');
@@ -599,7 +614,6 @@
             const users = getAllUsers();
             const usernameLower = username.toLowerCase();
             
-            // Find user by username (case-insensitive)
             let foundUser = null;
             for (let userId in users) {
                 if (users[userId].username.toLowerCase() === usernameLower && users[userId].password === password) {
@@ -614,10 +628,23 @@
                 isAdmin = foundUser.isAdmin || false;
                 closeAuthModal();
                 updateUI();
-                saveToStorage(); // Save session immediately
+                saveToStorage();
             } else {
                 showAuthError('Invalid username or password');
             }
+        }
+
+        function saveUser(user) {
+            const users = getAllUsers();
+            users[user.id] = user;
+            const data = { 
+                users: users, 
+                cases: cases, 
+                timestamp: Date.now(),
+                currentUserId: currentUser ? currentUser.id : null,
+                isAdmin: isAdmin
+            };
+            localStorage.setItem('dbet_data', JSON.stringify(data));
         }
 
         function showAuthError(message) {
@@ -630,7 +657,6 @@
             currentUser = null; 
             balance = 0; 
             isAdmin = false;
-            // Clear session from storage
             const data = { 
                 users: getAllUsers(), 
                 cases: cases, 
@@ -654,7 +680,7 @@
                 updateUI(); 
                 showView('adminPanel'); 
                 renderAdminPanel();
-                saveToStorage(); // Save admin session
+                saveToStorage();
             } else {
                 document.getElementById('adminLoginError').style.display = 'block';
             }
@@ -701,9 +727,18 @@
             }
         }
 
-        function updateBalanceDisplay() { document.getElementById('balanceAmount').textContent = balance.toFixed(2); }
+        function updateBalanceDisplay() { 
+            document.getElementById('balanceAmount').textContent = balance.toFixed(2); 
+        }
+        
         function updateBalance(amount) { 
-            balance += amount; 
+            const currentCents = Math.round(balance * 100);
+            const amountCents = Math.round(amount * 100);
+            const newCents = currentCents + amountCents;
+            
+            balance = newCents / 100;
+            if (balance < 0) balance = 0;
+            
             if (currentUser) {
                 currentUser.balance = balance;
                 saveToStorage();
@@ -713,12 +748,30 @@
 
         // ==================== NAVIGATION ====================
         function showView(viewName) {
-            if (viewName !== 'lobby' && !currentUser) { alert('Please login first!'); return; }
+            if (viewName !== 'lobby' && !currentUser) { 
+                alert('Please login first!'); 
+                return; 
+            }
             document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
             document.getElementById(viewName).classList.add('active');
-            if (viewName === 'roulette') { initRoulette(); renderWheelNumbers(); }
-            if (viewName === 'cases') { renderCases(); updateMyCasesStats(); }
-            if (viewName === 'blackjack') { bjReset(); }
+            
+            if (viewName === 'roulette') { 
+                initRoulette(); 
+                renderWheelNumbers(); 
+            }
+            if (viewName === 'cases') { 
+                renderCases(); 
+                updateMyCasesStats(); 
+            }
+            if (viewName === 'casePreview' && previewCaseId) {
+                renderCasePreview(previewCaseId);
+            }
+            if (viewName === 'caseOpening' && openingCaseId) {
+                resetCaseOpening();
+            }
+            if (viewName === 'blackjack') { 
+                bjReset(); 
+            }
         }
 
         function switchCaseTab(tab) {
@@ -736,7 +789,8 @@
             }
             renderCases();
         }
-                // ==================== CASE MANAGEMENT ====================
+        
+        // ==================== CASE MANAGEMENT ====================
         function calculateCasePrice(items) {
             if (items.length === 0) return 0;
             let expectedValue = 0;
@@ -747,43 +801,97 @@
             return Math.round((expectedValue * 1.05 + 0.01) * 100) / 100;
         }
 
+        function getRarityColor(chance) {
+            if (chance <= 0.5) return '#ef4444'; // Legendary
+            if (chance <= 2) return '#8b5cf6';   // Epic
+            if (chance <= 5) return '#3b82f6';   // Rare
+            if (chance <= 15) return '#10b981';  // Uncommon
+            return '#9ca3af';                     // Common
+        }
+
+        function getRarityText(chance) {
+            if (chance <= 0.5) return 'LEGENDARY';
+            if (chance <= 2) return 'EPIC';
+            if (chance <= 5) return 'RARE';
+            if (chance <= 15) return 'UNCOMMON';
+            return 'COMMON';
+        }
+
+        function selectAppearance(appearance) {
+            selectedAppearance = appearance;
+            document.querySelectorAll('.appearance-option').forEach(opt => opt.classList.remove('selected'));
+            document.querySelector(`.appearance-option[data-appearance="${appearance}"]`).classList.add('selected');
+        }
+
         function openCreateCaseModal() {
             if (!currentUser) return;
             const userCases = cases.filter(c => c.ownerId === currentUser.id);
-            if (userCases.length >= MAX_CASES_PER_USER) { alert('You can only create up to ' + MAX_CASES_PER_USER + ' cases!'); return; }
-            editingCaseId = null; currentCaseItems = [];
+            if (userCases.length >= MAX_CASES_PER_USER) { 
+                alert('You can only create up to ' + MAX_CASES_PER_USER + ' cases!'); 
+                return; 
+            }
+            editingCaseId = null; 
+            currentCaseItems = [];
+            selectedAppearance = 1;
+            document.querySelectorAll('.appearance-option').forEach(opt => opt.classList.remove('selected'));
+            document.querySelector('.appearance-option[data-appearance="1"]').classList.add('selected');
             document.getElementById('modalTitle').textContent = 'Create New Case';
             document.getElementById('caseNameInput').value = '';
-            renderItemsList(); updateCasePreview();
+            renderItemsList(); 
+            updateCasePreview();
             document.getElementById('caseModal').classList.add('active');
         }
 
         function openEditCaseModal(caseId) {
             const caseData = cases.find(c => c.id === caseId);
             if (!caseData) return;
-            if (caseData.ownerId !== currentUser.id && !currentUser.isAdmin) { alert('You can only edit your own cases!'); return; }
-            editingCaseId = caseId; currentCaseItems = [...caseData.items];
+            if (caseData.ownerId !== currentUser.id && !currentUser.isAdmin) { 
+                alert('You can only edit your own cases!'); 
+                return; 
+            }
+            editingCaseId = caseId; 
+            currentCaseItems = JSON.parse(JSON.stringify(caseData.items));
+            selectedAppearance = caseData.appearance || 1;
+            document.querySelectorAll('.appearance-option').forEach(opt => opt.classList.remove('selected'));
+            document.querySelector(`.appearance-option[data-appearance="${selectedAppearance}"]`).classList.add('selected');
             document.getElementById('modalTitle').textContent = 'Edit Case';
             document.getElementById('caseNameInput').value = caseData.name;
-            renderItemsList(); updateCasePreview();
+            renderItemsList(); 
+            updateCasePreview();
             document.getElementById('caseModal').classList.add('active');
         }
 
-        function closeCaseModal() { document.getElementById('caseModal').classList.remove('active'); editingCaseId = null; currentCaseItems = []; }
+        function closeCaseModal() { 
+            document.getElementById('caseModal').classList.remove('active'); 
+            editingCaseId = null; 
+            currentCaseItems = []; 
+        }
 
         function renderItemsList() {
             const container = document.getElementById('itemsList');
-            if (currentCaseItems.length === 0) { container.innerHTML = '<p style="color: var(--text-secondary); text-align: center; padding: 20px;">No items added yet. Click "Add Item" below.</p>'; return; }
+            if (currentCaseItems.length === 0) { 
+                container.innerHTML = '<p style="color: var(--text-secondary); text-align: center; padding: 20px;">No items added yet. Click "Add Item" below.</p>'; 
+                return; 
+            }
             let html = '';
             currentCaseItems.forEach((item, index) => {
                 const itemData = ITEMS_DB.find(i => i.name === item.name);
-                html += `<div class="item-row"><img src="${itemData ? itemData.png : ''}" alt="${item.name}" style="width: 32px; height: 32px;" onerror="this.style.display='none'"><span style="font-weight: 600;">${item.name}</span><span style="color: var(--dl-cyan); font-size: 12px;">${itemData ? itemData.price.toFixed(2) : '0.00'} DL</span><input type="number" min="0.001" max="99" step="0.001" value="${item.chance}" onchange="updateItemChance(${index}, this.value)" style="width: 80px;"><button onclick="removeItemFromCase(${index})" style="background: var(--accent-red); color: white; border: none; border-radius: 4px; cursor: pointer;">×</button></div>`;
+                html += `<div class="item-row">
+                    <img src="${itemData ? itemData.png : ''}" alt="${item.name}" style="width: 32px; height: 32px;" onerror="this.style.display='none'">
+                    <span style="font-weight: 600;">${item.name}</span>
+                    <span style="color: var(--dl-cyan); font-size: 12px;">${itemData ? itemData.price.toFixed(2) : '0.00'} DL</span>
+                    <input type="number" min="0.001" max="99" step="0.001" value="${item.chance}" onchange="updateItemChance(${index}, this.value)" style="width: 80px;">
+                    <button onclick="removeItemFromCase(${index})" style="background: var(--accent-red); color: white; border: none; border-radius: 4px; cursor: pointer;">×</button>
+                </div>`;
             });
             container.innerHTML = html;
         }
 
         function showItemSelector() {
-            if (currentCaseItems.length >= 10) { alert('Maximum 10 items per case!'); return; }
+            if (currentCaseItems.length >= 10) { 
+                alert('Maximum 10 items per case!'); 
+                return; 
+            }
             document.getElementById('itemSelectorModal').classList.add('active');
             document.getElementById('itemSearch').value = '';
             renderItemSelector();
@@ -830,27 +938,51 @@
             const decodedName = itemName.replace(/\\'/g, "'");
             const selectedItem = ITEMS_DB.find(i => i.name === decodedName);
             if (!selectedItem) return;
-            if (currentCaseItems.find(i => i.name === selectedItem.name)) { alert('This item is already in the case!'); return; }
+            if (currentCaseItems.find(i => i.name === selectedItem.name)) { 
+                alert('This item is already in the case!'); 
+                return; 
+            }
             currentCaseItems.push({ name: decodedName, chance: 10.0 });
             closeItemSelector();
             renderItemsList(); 
             updateCasePreview();
         }
 
-        function removeItemFromCase(index) { currentCaseItems.splice(index, 1); renderItemsList(); updateCasePreview(); }
-        function updateItemChance(index, value) { let chance = parseFloat(value); if (chance < 0.001) chance = 0.001; if (chance > 99) chance = 99; currentCaseItems[index].chance = chance; renderItemsList(); updateCasePreview(); }
+        function removeItemFromCase(index) { 
+            currentCaseItems.splice(index, 1); 
+            renderItemsList(); 
+            updateCasePreview(); 
+        }
+        
+        function updateItemChance(index, value) { 
+            let chance = parseFloat(value); 
+            if (chance < 0.001) chance = 0.001; 
+            if (chance > 99) chance = 99; 
+            currentCaseItems[index].chance = chance; 
+            renderItemsList(); 
+            updateCasePreview(); 
+        }
 
         function updateCasePreview() {
             const previewContainer = document.getElementById('caseItemsPreview');
             const priceDisplay = document.getElementById('calculatedPrice');
-            if (currentCaseItems.length === 0) { previewContainer.innerHTML = '<p style="color: var(--text-secondary); text-align: center; padding: 20px;">Add items to see preview</p>'; priceDisplay.textContent = '0.00 DL'; return; }
+            if (currentCaseItems.length === 0) { 
+                previewContainer.innerHTML = '<p style="color: var(--text-secondary); text-align: center; padding: 20px;">Add items to see preview</p>'; 
+                priceDisplay.textContent = '0.00 DL'; 
+                return; 
+            }
             const totalChance = currentCaseItems.reduce((sum, item) => sum + item.chance, 0);
             const isValid = Math.abs(totalChance - 100) < 0.01;
             let html = '<div style="display: grid; gap: 8px;">';
             currentCaseItems.forEach(item => {
                 const itemData = ITEMS_DB.find(i => i.name === item.name);
-                const rarityColor = item.chance < 1 ? '#8b5cf6' : item.chance < 10 ? '#3b82f6' : '#9ca3af';
-                html += `<div style="display: flex; align-items: center; gap: 12px; padding: 8px; background: var(--bg-dark); border-radius: 6px;"><img src="${itemData ? itemData.png : ''}" style="width: 32px; height: 32px;" onerror="this.style.display='none'"><span style="flex: 1;">${item.name}</span><span style="color: ${rarityColor}; font-weight: 600;">${item.chance.toFixed(3)}%</span><span style="color: var(--dl-cyan);">${itemData ? itemData.price.toFixed(2) : '0.00'} DL</span></div>`;
+                const rarityColor = getRarityColor(item.chance);
+                html += `<div style="display: flex; align-items: center; gap: 12px; padding: 8px; background: var(--bg-dark); border-radius: 6px;">
+                    <img src="${itemData ? itemData.png : ''}" style="width: 32px; height: 32px;" onerror="this.style.display='none'">
+                    <span style="flex: 1;">${item.name}</span>
+                    <span style="color: ${rarityColor}; font-weight: 600;">${item.chance.toFixed(3)}%</span>
+                    <span style="color: var(--dl-cyan);">${itemData ? itemData.price.toFixed(2) : '0.00'} DL</span>
+                </div>`;
             });
             html += '</div>';
             if (!isValid) html += `<p style="color: var(--accent-red); text-align: center; margin-top: 12px;">Total chance must equal 100% (currently ${totalChance.toFixed(3)}%)</p>`;
@@ -860,30 +992,66 @@
 
         function saveCase() {
             const name = document.getElementById('caseNameInput').value.trim();
-            if (!name) { alert('Please enter a case name!'); return; }
-            if (currentCaseItems.length < 2) { alert('Add at least 2 items to the case!'); return; }
+            if (!name) { 
+                alert('Please enter a case name!'); 
+                return; 
+            }
+            if (currentCaseItems.length < 2) { 
+                alert('Add at least 2 items to the case!'); 
+                return; 
+            }
             const totalChance = currentCaseItems.reduce((sum, item) => sum + item.chance, 0);
-            if (Math.abs(totalChance - 100) > 0.01) { alert('Total chance must equal exactly 100%! Currently: ' + totalChance.toFixed(3) + '%'); return; }
+            if (Math.abs(totalChance - 100) > 0.01) { 
+                alert('Total chance must equal exactly 100%! Currently: ' + totalChance.toFixed(3) + '%'); 
+                return; 
+            }
             const price = calculateCasePrice(currentCaseItems);
             if (editingCaseId) {
                 const caseIndex = cases.findIndex(c => c.id === editingCaseId);
-                if (caseIndex >= 0) { cases[caseIndex].name = name; cases[caseIndex].items = [...currentCaseItems]; cases[caseIndex].price = price; cases[caseIndex].updatedAt = Date.now(); }
+                if (caseIndex >= 0) { 
+                    cases[caseIndex].name = name; 
+                    cases[caseIndex].items = [...currentCaseItems]; 
+                    cases[caseIndex].price = price; 
+                    cases[caseIndex].appearance = selectedAppearance;
+                    cases[caseIndex].updatedAt = Date.now(); 
+                }
             } else {
-                const newCase = { id: 'case_' + Date.now(), name: name, ownerId: currentUser.id, ownerName: currentUser.username, items: [...currentCaseItems], price: price, totalOpens: 0, pendingEarnings: 0, totalEarned: 0, createdAt: Date.now(), updatedAt: Date.now() };
+                const newCase = { 
+                    id: 'case_' + Date.now(), 
+                    name: name, 
+                    ownerId: currentUser.id, 
+                    ownerName: currentUser.username, 
+                    items: [...currentCaseItems], 
+                    price: price, 
+                    appearance: selectedAppearance,
+                    totalOpens: 0, 
+                    pendingEarnings: 0, 
+                    totalEarned: 0, 
+                    createdAt: Date.now(), 
+                    updatedAt: Date.now() 
+                };
                 cases.push(newCase);
                 currentUser.casesCreated = (currentUser.casesCreated || 0) + 1;
             }
-            saveToStorage(); closeCaseModal(); renderCases(); updateMyCasesStats();
+            saveToStorage(); 
+            closeCaseModal(); 
+            renderCases(); 
+            updateMyCasesStats();
         }
 
         function deleteCase(caseId) {
             const caseData = cases.find(c => c.id === caseId);
             if (!caseData) return;
-            if (caseData.ownerId !== currentUser.id && !currentUser.isAdmin) { alert('You can only delete your own cases!'); return; }
+            if (caseData.ownerId !== currentUser.id && !currentUser.isAdmin) { 
+                alert('You can only delete your own cases!'); 
+                return; 
+            }
             if (!confirm('Are you sure you want to delete this case?')) return;
             cases = cases.filter(c => c.id !== caseId);
             if (caseData.ownerId === currentUser.id) currentUser.casesCreated = Math.max(0, (currentUser.casesCreated || 0) - 1);
-            saveToStorage(); renderCases(); updateMyCasesStats();
+            saveToStorage(); 
+            renderCases(); 
+            updateMyCasesStats();
         }
 
         function renderCases() {
@@ -902,7 +1070,32 @@
         function createCaseCard(caseData, isMyCase) {
             const canEdit = caseData.ownerId === currentUser.id || currentUser.isAdmin;
             const ownerCut = (caseData.price * OWNER_CUT_PERCENTAGE / 100).toFixed(4);
-            return `<div class="case-card-new"><div class="case-header"><div class="case-icon-new">📦</div><div class="case-info"><h3>${caseData.name}</h3><p>by ${caseData.ownerName} ${caseData.ownerId === currentUser.id ? '(You)' : ''}</p></div></div><div class="case-price-new">${caseData.price.toFixed(2)} DL</div><div class="case-stats"><span>📦 ${caseData.items.length} items</span><span>🎲 ${caseData.totalOpens || 0} opens</span></div>${isMyCase ? `<div class="case-stats" style="margin-bottom: 12px;"><span>💰 ${(caseData.pendingEarnings || 0).toFixed(4)} DL pending</span><span>📈 ${(caseData.totalEarned || 0).toFixed(4)} DL earned</span></div><div style="font-size: 11px; color: var(--text-secondary); margin-bottom: 12px;">You earn ${ownerCut} DL per open (0.1%)</div>` : ''}<div class="case-actions"><button class="btn-open-case" onclick="startOpeningCase('${caseData.id}')">Open</button>${canEdit ? `<button class="btn-edit" onclick="openEditCaseModal('${caseData.id}')">Edit</button>` : ''}${canEdit ? `<button class="btn-delete" onclick="deleteCase('${caseData.id}')">Delete</button>` : ''}${isMyCase && (caseData.pendingEarnings || 0) > 0 ? `<button class="btn-claim" onclick="claimEarnings('${caseData.id}')">Claim</button>` : ''}</div></div>`;
+            const appearance = caseData.appearance || 1;
+            return `<div class="case-card-new">
+                <div class="case-header">
+                    <div class="case-icon-new" style="background-image: url('case${appearance}.png'); background-size: cover;"></div>
+                    <div class="case-info">
+                        <h3>${caseData.name}</h3>
+                        <p>by ${caseData.ownerName} ${caseData.ownerId === currentUser.id ? '(You)' : ''}</p>
+                    </div>
+                </div>
+                <div class="case-price-new">${caseData.price.toFixed(2)} DL</div>
+                <div class="case-stats">
+                    <span>📦 ${caseData.items.length} items</span>
+                    <span>🎲 ${caseData.totalOpens || 0} opens</span>
+                </div>
+                ${isMyCase ? `<div class="case-stats" style="margin-bottom: 12px;">
+                    <span>💰 ${(caseData.pendingEarnings || 0).toFixed(4)} DL pending</span>
+                    <span>📈 ${(caseData.totalEarned || 0).toFixed(4)} DL earned</span>
+                </div>
+                <div style="font-size: 11px; color: var(--text-secondary); margin-bottom: 12px;">You earn ${ownerCut} DL per open (0.1%)</div>` : ''}
+                <div class="case-actions">
+                    <button class="btn-open-case" onclick="showCasePreview('${caseData.id}')">View & Open</button>
+                    ${canEdit ? `<button class="btn-edit" onclick="openEditCaseModal('${caseData.id}')">Edit</button>` : ''}
+                    ${canEdit ? `<button class="btn-delete" onclick="deleteCase('${caseData.id}')">Delete</button>` : ''}
+                    ${isMyCase && (caseData.pendingEarnings || 0) > 0 ? `<button class="btn-claim" onclick="claimEarnings('${caseData.id}')">Claim</button>` : ''}
+                </div>
+            </div>`;
         }
 
         function updateMyCasesStats() {
@@ -921,221 +1114,181 @@
             const caseData = cases.find(c => c.id === caseId);
             if (!caseData || caseData.ownerId !== currentUser.id) return;
             const earnings = caseData.pendingEarnings || 0;
-            if (earnings <= 0) { alert('No earnings to claim!'); return; }
+            if (earnings <= 0) { 
+                alert('No earnings to claim!'); 
+                return; 
+            }
             updateBalance(earnings);
             caseData.pendingEarnings = 0;
             caseData.totalEarned = (caseData.totalEarned || 0) + earnings;
             currentUser.pendingEarnings = (currentUser.pendingEarnings || 0) - earnings;
             currentUser.totalEarned = (currentUser.totalEarned || 0) + earnings;
-            saveToStorage(); renderCases(); updateMyCasesStats();
+            saveToStorage(); 
+            renderCases(); 
+            updateMyCasesStats();
             alert(`Claimed ${earnings.toFixed(4)} DL!`);
         }
-                // ==================== FIXED CASE OPENING ====================
-        let caseAnimationId = null;
-        let caseIsSpinning = false;
-        
-        function startOpeningCase(caseId) {
+
+        function showCasePreview(caseId) {
+            previewCaseId = caseId;
+            showView('casePreview');
+        }
+
+        function renderCasePreview(caseId) {
             const caseData = cases.find(c => c.id === caseId);
             if (!caseData) return;
-            if (balance < caseData.price) { alert('Insufficient balance! You need ' + caseData.price.toFixed(2) + ' DL'); return; }
+            
+            const container = document.getElementById('casePreviewContainer');
+            let itemsHtml = '';
+            
+            caseData.items.sort((a, b) => b.chance - a.chance).forEach(item => {
+                const itemData = ITEMS_DB.find(i => i.name === item.name);
+                const rarityColor = getRarityColor(item.chance);
+                const rarityText = getRarityText(item.chance);
+                
+                itemsHtml += `
+                    <div class="case-preview-item" style="border-color: ${rarityColor};">
+                        <img src="${itemData ? itemData.png : ''}" alt="${item.name}" onerror="this.src='data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%2280%22 height=%2280%22><rect width=%2280%22 height=%2280%22 fill=%22%23374151%22/><text x=%2240%22 y=%2240%22 text-anchor=%22middle%22 dy=%22.3em%22 fill=%22%239ca3af%22 font-size=%2230%22>📦</text></svg>'">
+                        <div class="case-preview-item-name">${item.name}</div>
+                        <div class="case-preview-item-price">${itemData ? itemData.price.toFixed(2) : '0.00'} DL</div>
+                        <div class="case-preview-item-chance" style="color: ${rarityColor};">${item.chance.toFixed(2)}%</div>
+                        <div style="font-size: 12px; color: ${rarityColor};">${rarityText}</div>
+                    </div>
+                `;
+            });
+            
+            container.innerHTML = `
+                <div class="case-preview-header">
+                    <div class="case-preview-title">${caseData.name}</div>
+                    <div class="case-preview-price">${caseData.price.toFixed(2)} DL</div>
+                    <div style="color: var(--text-secondary); margin-top: 8px;">Created by ${caseData.ownerName}</div>
+                </div>
+                <div class="case-items-grid">
+                    ${itemsHtml}
+                </div>
+                <div class="case-actions-preview">
+                    <button class="btn btn-outline" onclick="showView('cases')">Back</button>
+                    <button class="btn btn-green" onclick="startCaseOpening('${caseData.id}')">Open Case (${caseData.price.toFixed(2)} DL)</button>
+                </div>
+            `;
+        }
+
+        // ==================== SIMPLE CASE OPENING (3 CLICKS) ====================
+        function startCaseOpening(caseId) {
+            const caseData = cases.find(c => c.id === caseId);
+            if (!caseData) return;
+            if (balance < caseData.price) { 
+                alert('Insufficient balance! You need ' + caseData.price.toFixed(2) + ' DL'); 
+                return; 
+            }
+            
             openingCaseId = caseId;
             document.getElementById('openingCaseName').textContent = '📦 Opening: ' + caseData.name;
             document.getElementById('openingCasePrice').textContent = caseData.price.toFixed(2) + ' DL';
-            document.getElementById('caseOpeningResult').innerHTML = '';
-            document.getElementById('openCaseSpinBtn').disabled = false;
-            document.getElementById('openCaseSpinBtn').textContent = 'OPEN CASE';
             
-            // Clear any existing animation
-            if (caseAnimationId) {
-                cancelAnimationFrame(caseAnimationId);
-                caseAnimationId = null;
-            }
-            caseIsSpinning = false;
-            
-            // Reset roulette
-            const roulette = document.getElementById('caseRoulette');
-            roulette.innerHTML = '';
-            roulette.style.transform = 'translateX(0px)';
+            // Set case image
+            document.getElementById('caseImage').style.backgroundImage = `url('case${caseData.appearance || 1}.png')`;
             
             showView('caseOpening');
         }
 
-        // Helper function to get rarity color based on chance
-        function getRarityColor(chance) {
-            if (chance <= 0.5) return '#ef4444'; // Legendary - Red
-            if (chance <= 2) return '#8b5cf6';   // Epic - Purple  
-            if (chance <= 5) return '#3b82f6';   // Rare - Blue
-            if (chance <= 15) return '#10b981';  // Uncommon - Green
-            return '#9ca3af';                     // Common - Gray
+        function resetCaseOpening() {
+            currentClicks = 0;
+            isOpening = false;
+            document.getElementById('clickCounter').textContent = maxClicks;
+            document.getElementById('clickCounter').style.display = 'block';
+            document.getElementById('clickInstruction').style.display = 'block';
+            document.getElementById('clickInstruction').textContent = 'Click the case to open (3 clicks)';
+            document.getElementById('caseResultArea').style.display = 'none';
+            document.getElementById('openAgainBtn').style.display = 'none';
+            document.getElementById('caseImageContainer').style.cursor = 'pointer';
+            document.getElementById('caseImage').style.opacity = '1';
         }
 
-        function spinCase() {
+        function handleCaseClick() {
+            if (isOpening) return;
+            
             const caseData = cases.find(c => c.id === openingCaseId);
-            if (!caseData || caseIsSpinning) return;
+            if (!caseData) return;
             
-            const btn = document.getElementById('openCaseSpinBtn');
-            btn.disabled = true;
-            btn.textContent = 'OPENING...';
-            updateBalance(-caseData.price);
+            // Deduct payment on first click
+            if (currentClicks === 0) {
+                updateBalance(-caseData.price);
+            }
             
-            // Determine winner immediately based on probability
+            currentClicks++;
+            
+            // Click animation
+            const container = document.getElementById('caseImageContainer');
+            container.classList.add('clicked');
+            setTimeout(() => container.classList.remove('clicked'), 100);
+            
+            // Update counter
+            document.getElementById('clickCounter').textContent = maxClicks - currentClicks;
+            
+            if (currentClicks >= maxClicks) {
+                // Reveal item
+                isOpening = true;
+                revealCaseItem(caseData);
+            }
+        }
+
+        function revealCaseItem(caseData) {
+            // Determine winning item based on probabilities
             const roll = Math.random() * 100;
             let cumulative = 0;
             let winningItem = caseData.items[0];
-            let winningIndex = 0;
             
             for (let i = 0; i < caseData.items.length; i++) {
                 cumulative += caseData.items[i].chance;
                 if (roll <= cumulative) { 
                     winningItem = caseData.items[i]; 
-                    winningIndex = i;
                     break; 
                 }
             }
             
             const winningItemData = ITEMS_DB.find(i => i.name === winningItem.name);
-            const winningRarityColor = getRarityColor(winningItem.chance);
-            
-            // Generate items for the roulette - organized by rarity
-            const roulette = document.getElementById('caseRoulette');
-            roulette.innerHTML = '';
-            
-            const itemWidth = 136; // 120px + 16px gap
-            const containerWidth = 900;
-            const centerOffset = (containerWidth / 2) - (itemWidth / 2);
-            
-            // Sort case items by rarity (highest chance first = common, lowest = rare)
-            const sortedItems = [...caseData.items].sort((a, b) => b.chance - a.chance);
-            
-            // Create 60 items with proper rarity distribution
-            const items = [];
-            
-            // Fill with items based on their actual probabilities
-            for (let i = 0; i < 60; i++) {
-                // Pick random item based on actual chances
-                const rand = Math.random() * 100;
-                let cum = 0;
-                let selectedItem = caseData.items[0];
-                
-                for (let item of caseData.items) {
-                    cum += item.chance;
-                    if (rand <= cum) {
-                        selectedItem = item;
-                        break;
-                    }
-                }
-                
-                const itemData = ITEMS_DB.find(it => it.name === selectedItem.name);
-                items.push({ 
-                    name: selectedItem.name, 
-                    png: itemData ? itemData.png : '', 
-                    price: itemData ? itemData.price : 0,
-                    chance: selectedItem.chance,
-                    rarityColor: getRarityColor(selectedItem.chance),
-                    isWinner: false
-                });
-            }
-            
-            // Place winner at position 45 (visible in center after spin)
-            const winnerPosition = 45;
-            items[winnerPosition] = { 
-                name: winningItem.name, 
-                png: winningItemData ? winningItemData.png : '', 
-                price: winningItemData ? winningItemData.price : 0,
-                chance: winningItem.chance,
-                rarityColor: winningRarityColor,
-                isWinner: true
-            };
-            
-            // Render items with rarity colors
-            let html = '';
-            items.forEach((item, index) => {
-                const borderColor = item.isWinner ? 'var(--accent-gold)' : item.rarityColor;
-                const glowStyle = item.isWinner ? 'box-shadow: 0 0 30px rgba(245, 158, 11, 0.5);' : '';
-                
-                html += `<div class="roulette-item" id="rouletteItem_${index}" data-index="${index}" style="border-color: ${borderColor}; ${glowStyle}">
-                    <img src="${item.png}" alt="${item.name}" onerror="this.src='data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%2270%22 height=%2270%22><rect width=%2270%22 height=%2270%22 fill=%22%23374151%22/><text x=%2235%22 y=%2235%22 text-anchor=%22middle%22 dy=%22.3em%22 fill=%22%239ca3af%22 font-size=%2230%22>📦</text></svg>'">
-                    <span class="item-name" style="color: ${item.rarityColor};">${item.name}</span>
-                    <span class="item-price">${item.price.toFixed(2)} DL</span>
-                    <span style="font-size: 9px; color: ${item.rarityColor}; font-weight: 600;">${item.chance < 1 ? item.chance.toFixed(2) : item.chance.toFixed(1)}%</span>
-                </div>`;
-            });
-            roulette.innerHTML = html;
-            
-            // Calculate target position to center the winner
-            const targetPosition = -(winnerPosition * itemWidth) + centerOffset;
-            
-            // Animation variables
-            let position = 0;
-            let startTime = null;
-            const duration = 4000; // 4 seconds
-            
-            caseIsSpinning = true;
-            
-            function animate(currentTime) {
-                if (!caseIsSpinning) return;
-                
-                if (!startTime) startTime = currentTime;
-                const elapsed = currentTime - startTime;
-                const progress = Math.min(elapsed / duration, 1);
-                
-                // Ease-out cubic function for smooth deceleration
-                const easeOut = 1 - Math.pow(1 - progress, 3);
-                
-                position = targetPosition * easeOut;
-                roulette.style.transform = `translateX(${position}px)`;
-                
-                if (progress < 1) {
-                    caseAnimationId = requestAnimationFrame(animate);
-                } else {
-                    // Animation complete
-                    roulette.style.transform = `translateX(${targetPosition}px)`;
-                    caseIsSpinning = false;
-                    caseAnimationId = null;
-                    
-                    // Add winner class after stopping
-                    const winnerEl = document.getElementById(`rouletteItem_${winnerPosition}`);
-                    if (winnerEl) {
-                        winnerEl.classList.add('winner');
-                        winnerEl.style.borderColor = 'var(--accent-gold)';
-                        winnerEl.style.transform = 'scale(1.15)';
-                    }
-                    
-                    setTimeout(() => finalizeCaseOpening(winningItem, winningItemData, caseData), 800);
-                }
-            }
-            
-            caseAnimationId = requestAnimationFrame(animate);
-        }
-
-        function finalizeCaseOpening(winningItem, winningItemData, caseData) {
             const profit = winningItemData.price - caseData.price;
             const isWin = profit > 0;
+            const rarityColor = getRarityColor(winningItem.chance);
+            const rarityText = getRarityText(winningItem.chance);
+            
+            // Update case stats
             caseData.totalOpens = (caseData.totalOpens || 0) + 1;
             const ownerCut = caseData.price * OWNER_CUT_PERCENTAGE / 100;
             caseData.pendingEarnings = (caseData.pendingEarnings || 0) + ownerCut;
             
-            // Update owner earnings
             const users = getAllUsers();
             if (users[caseData.ownerId]) {
                 users[caseData.ownerId].pendingEarnings = (users[caseData.ownerId].pendingEarnings || 0) + ownerCut;
                 saveToStorage();
             }
             
-            const resultEl = document.getElementById('caseOpeningResult');
-            const rarityColor = getRarityColor(winningItem.chance);
-            const rarityText = winningItem.chance <= 0.5 ? 'LEGENDARY' : winningItem.chance <= 2 ? 'EPIC' : winningItem.chance <= 5 ? 'RARE' : winningItem.chance <= 15 ? 'UNCOMMON' : 'COMMON';
+            // Award prize
+            updateBalance(winningItemData.price);
             
-            resultEl.innerHTML = `<div style="font-size: 48px; margin-bottom: 16px;">${isWin ? '🎉' : '📦'}</div>
+            // Hide counter and show result
+            document.getElementById('clickCounter').style.display = 'none';
+            document.getElementById('clickInstruction').style.display = 'none';
+            document.getElementById('caseImage').style.opacity = '0.3';
+            
+            const resultArea = document.getElementById('caseResultArea');
+            resultArea.style.display = 'block';
+            resultArea.innerHTML = `
+                <img src="${winningItemData.png}" alt="${winningItem.name}" class="result-item-image" onerror="this.src='data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%22120%22 height=%22120%22><rect width=%22120%22 height=%22120%22 fill=%22%23374151%22/><text x=%2260%22 y=%2260%22 text-anchor=%22middle%22 dy=%22.3em%22 fill=%22%239ca3af%22 font-size=%2240%22>📦</text></svg>'">
                 <div style="font-size: 14px; color: ${rarityColor}; font-weight: 700; margin-bottom: 8px; text-transform: uppercase; letter-spacing: 0.1em;">${rarityText}</div>
-                <div style="font-size: 24px; font-weight: 700; margin-bottom: 8px;">You won: ${winningItem.name}!</div>
-                <div style="font-size: 18px; color: ${isWin ? 'var(--accent-green)' : 'var(--text-secondary)'};">Value: ${winningItemData.price.toFixed(2)} DL ${isWin ? `(+${profit.toFixed(2)} DL profit)` : `(${profit.toFixed(2)} DL)`}</div>`;
-            resultEl.className = 'result-message ' + (isWin ? 'win' : 'push');
+                <div class="result-item-name">${winningItem.name}</div>
+                <div class="result-item-price">${winningItemData.price.toFixed(2)} DL</div>
+                <div style="font-size: 16px; color: ${isWin ? 'var(--accent-green)' : 'var(--text-secondary)'}; margin-top: 10px;">
+                    ${isWin ? `+${profit.toFixed(2)} DL profit` : `${profit.toFixed(2)} DL loss`}
+                </div>
+            `;
             
-            document.getElementById('openCaseSpinBtn').textContent = 'OPEN AGAIN';
-            document.getElementById('openCaseSpinBtn').disabled = false;
+            document.getElementById('openAgainBtn').style.display = 'inline-block';
+            document.getElementById('caseImageContainer').style.cursor = 'default';
         }
-                // ==================== FIXED ROULETTE ====================
+
+        // ==================== FIXED ROULETTE ====================
         function initRoulette() {
             const container = document.getElementById('rouletteNumbers');
             container.innerHTML = '';
@@ -1165,40 +1318,34 @@
             `;
         }
 
-        // FIXED: Proper wheel rendering with correct number sequence
         function renderWheelNumbers() {
             const wheelInner = document.getElementById('wheelInner');
             wheelInner.innerHTML = '';
             
             const segmentAngle = 360 / 37;
-            
-            // European roulette wheel sequence (clockwise from 0 at top)
             const wheelSequence = [0, 32, 15, 19, 4, 21, 2, 25, 17, 34, 6, 27, 13, 36, 11, 30, 8, 23, 10, 5, 24, 16, 33, 1, 20, 14, 31, 9, 22, 18, 29, 7, 28, 12, 35, 3, 26];
             
-            // Create SVG for proper wheel
             let svgContent = '';
             wheelSequence.forEach((num, index) => {
                 const numData = rouletteNumbers.find(n => n.num === num);
-                const startAngle = index * segmentAngle;
-                const endAngle = (index + 1) * segmentAngle;
+                const startAngle = index * segmentAngle - 90;
+                const endAngle = (index + 1) * segmentAngle - 90;
                 
-                // Calculate path for segment
-                const x1 = 50 + 50 * Math.cos((startAngle - 90) * Math.PI / 180);
-                const y1 = 50 + 50 * Math.sin((startAngle - 90) * Math.PI / 180);
-                const x2 = 50 + 50 * Math.cos((endAngle - 90) * Math.PI / 180);
-                const y2 = 50 + 50 * Math.sin((endAngle - 90) * Math.PI / 180);
+                const x1 = 50 + 50 * Math.cos(startAngle * Math.PI / 180);
+                const y1 = 50 + 50 * Math.sin(startAngle * Math.PI / 180);
+                const x2 = 50 + 50 * Math.cos(endAngle * Math.PI / 180);
+                const y2 = 50 + 50 * Math.sin(endAngle * Math.PI / 180);
                 
                 const color = numData.color === 'red' ? '#dc2626' : numData.color === 'black' ? '#1f2937' : '#10b981';
                 
                 svgContent += `<path d="M50,50 L${x1},${y1} A50,50 0 0,1 ${x2},${y2} Z" fill="${color}" stroke="#0a0e1a" stroke-width="0.5"/>`;
                 
-                // Add number text
-                const textAngle = startAngle + segmentAngle / 2 - 90;
+                const textAngle = (startAngle + endAngle) / 2;
                 const textRadius = 42;
                 const tx = 50 + textRadius * Math.cos(textAngle * Math.PI / 180);
                 const ty = 50 + textRadius * Math.sin(textAngle * Math.PI / 180);
                 
-                svgContent += `<text x="${tx}" y="${ty}" text-anchor="middle" dominant-baseline="middle" fill="white" font-size="6" font-weight="bold" transform="rotate(${textAngle + 90}, ${tx}, ${ty})">${num}</text>`;
+                svgContent += `<text x="${tx}" y="${ty}" text-anchor="middle" dominant-baseline="middle" fill="white" font-size="6" font-weight="bold">${num}</text>`;
             });
             
             wheelInner.innerHTML = `<svg viewBox="0 0 100 100" style="width: 100%; height: 100%;">${svgContent}</svg>`;
@@ -1206,9 +1353,15 @@
 
         function placeRouletteBet(type, value) {
             if (rouletteSpinning) return;
-            if (rouletteCurrentBet === 0) { alert('Select bet amount first'); return; }
+            if (rouletteCurrentBet === 0) { 
+                alert('Select bet amount first'); 
+                return; 
+            }
             const totalBets = Object.values(rouletteBets).reduce((a, b) => a + b, 0);
-            if (totalBets + rouletteCurrentBet > balance) { alert('Insufficient balance'); return; }
+            if (totalBets + rouletteCurrentBet > balance) { 
+                alert('Insufficient balance'); 
+                return; 
+            }
             const key = type === 'num' ? `num_${value}` : `type_${value}`;
             rouletteBets[key] = (rouletteBets[key] || 0) + rouletteCurrentBet;
             updateRouletteBetDisplay();
@@ -1230,14 +1383,14 @@
                         el.classList.add('selected');
                         const badge = document.createElement('span');
                         badge.className = 'bet-amount';
-                        badge.textContent = amount.toFixed(1);
+                        badge.textContent = amount.toFixed(2);
                         el.appendChild(badge);
                     }
                 } else {
                     const el = document.querySelector(`[data-type="${value}"]`);
                     if (el) {
                         el.classList.add('selected');
-                        el.innerHTML = `${el.textContent.split('(')[0]}<span class="bet-amount" style="position: static; margin-left: 8px;">${amount.toFixed(1)}</span>`;
+                        el.innerHTML = `${el.textContent.split('(')[0]}<span class="bet-amount" style="position: static; margin-left: 8px;">${amount.toFixed(2)}</span>`;
                     }
                 }
             }
@@ -1250,54 +1403,55 @@
             updateRouletteBetDisplay();
         }
 
-        // FIXED: Proper roulette spin with reset
         document.getElementById('spinBtn').onclick = function() {
             if (rouletteSpinning) return;
             const totalBet = Object.values(rouletteBets).reduce((a, b) => a + b, 0);
-            if (totalBet === 0) { alert('Place a bet first'); return; }
+            if (totalBet === 0) { 
+                alert('Place a bet first'); 
+                return; 
+            }
+            
             rouletteSpinning = true;
             this.disabled = true;
             document.getElementById('rouletteResult').textContent = '';
             updateBalance(-totalBet);
             
-            // Determine winning number
             const winningIndex = Math.floor(Math.random() * 37);
             const winningData = rouletteNumbers[winningIndex];
             
-            // FIXED: Calculate rotation properly
-            // Wheel starts at 0 (0 at top). Each segment is 360/37 = 9.73 degrees
-            // To land on a number, we rotate so that number comes to top (0 degrees)
+            const wheel = document.getElementById('rouletteWheel');
             const segmentAngle = 360 / 37;
             
-            // The wheel needs to rotate so the winning number is at the top (where pointer is)
-            // Current position of winning number is at winningIndex * segmentAngle
-            // We need to rotate by -(winningIndex * segmentAngle) to bring it to top
-            // But we add extra full rotations for effect
+            // Reset wheel
+            wheel.style.transition = 'none';
+            wheel.style.transform = 'rotate(0deg)';
+            void wheel.offsetWidth;
             
-            const extraSpins = 5; // Minimum 5 full rotations
+            // Calculate rotation to bring winning number to top
+            const extraSpins = 5 + Math.floor(Math.random() * 3);
             const targetRotation = -(winningIndex * segmentAngle) - (extraSpins * 360);
             
-            // Ensure we always rotate in negative direction (clockwise visually)
-            // and accumulate rotation properly
-            const currentRotation = wheelRotation || 0;
-            const newRotation = currentRotation + targetRotation - 360; // Extra buffer
+            // Start spin
+            wheel.style.transition = 'transform 3s cubic-bezier(0.2, 0.9, 0.3, 1)';
+            wheel.style.transform = `rotate(${targetRotation}deg)`;
             
-            const wheel = document.getElementById('rouletteWheel');
-            wheel.style.transition = 'transform 4s cubic-bezier(0.17, 0.67, 0.12, 0.99)';
-            wheel.style.transform = `rotate(${newRotation}deg)`;
-            wheelRotation = newRotation;
-            
-            setTimeout(() => resolveRoulette(winningData.num, winningData.color), 4000);
+            setTimeout(() => {
+                resolveRoulette(winningData.num, winningData.color, totalBet);
+                rouletteSpinning = false;
+                document.getElementById('spinBtn').disabled = false;
+            }, 3000);
         };
 
-        function resolveRoulette(winningNum, winningColor) {
-            let winAmount = 0, totalBet = 0, maxMultiplier = 0;
+        function resolveRoulette(winningNum, winningColor, totalBet) {
+            let winAmount = 0, maxMultiplier = 0;
             for (let [key, amount] of Object.entries(rouletteBets)) {
-                totalBet += amount;
                 const [type, value] = key.split('_');
                 let won = false, multiplier = 0;
                 if (type === 'num') {
-                    if (parseInt(value) === winningNum) { won = true; multiplier = 35; }
+                    if (parseInt(value) === winningNum) { 
+                        won = true; 
+                        multiplier = 35; 
+                    }
                 } else {
                     switch(value) {
                         case 'red': if (winningColor === 'red') { won = true; multiplier = 2; } break;
@@ -1309,11 +1463,11 @@
                     }
                 }
                 if (won) {
-                    const thisWin = amount * multiplier;
-                    winAmount += thisWin;
+                    winAmount += amount * multiplier;
                     if (multiplier > maxMultiplier) maxMultiplier = multiplier;
                 }
             }
+            
             const resultEl = document.getElementById('rouletteResult');
             if (winAmount > 0) {
                 resultEl.innerHTML = `🎉 ${winningNum} ${winningColor.toUpperCase()}! Won ${winAmount.toFixed(2)} DL <span class="multiplier-tag">${maxMultiplier}x</span>`;
@@ -1325,8 +1479,6 @@
             }
             rouletteBets = {};
             updateRouletteBetDisplay();
-            rouletteSpinning = false;
-            document.getElementById('spinBtn').disabled = false;
         }
 
         document.querySelectorAll('.roulette-bet').forEach(btn => {
@@ -1336,19 +1488,33 @@
                 rouletteCurrentBet = parseFloat(this.dataset.amount);
             });
         });
-                // ==================== FIXED BLACKJACK ====================
+        
+        // ==================== BLACKJACK ====================
         function createDeck() {
             bjDeck = [];
             for (let suit of suits) for (let value of values) bjDeck.push({ suit, value });
-            for (let i = bjDeck.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [bjDeck[i], bjDeck[j]] = [bjDeck[j], bjDeck[i]]; }
+            for (let i = bjDeck.length - 1; i > 0; i--) { 
+                const j = Math.floor(Math.random() * (i + 1)); 
+                [bjDeck[i], bjDeck[j]] = [bjDeck[j], bjDeck[i]]; 
+            }
         }
 
-        function getCardValue(card) { if (['J', 'Q', 'K'].includes(card.value)) return 10; if (card.value === 'A') return 11; return parseInt(card.value); }
+        function getCardValue(card) { 
+            if (['J', 'Q', 'K'].includes(card.value)) return 10; 
+            if (card.value === 'A') return 11; 
+            return parseInt(card.value); 
+        }
 
         function calculateScore(hand) {
             let score = 0, aces = 0;
-            for (let card of hand) { score += getCardValue(card); if (card.value === 'A') aces++; }
-            while (score > 21 && aces > 0) { score -= 10; aces--; }
+            for (let card of hand) { 
+                score += getCardValue(card); 
+                if (card.value === 'A') aces++; 
+            }
+            while (score > 21 && aces > 0) { 
+                score -= 10; 
+                aces--; 
+            }
             return score;
         }
 
@@ -1356,7 +1522,11 @@
             if (hidden) return '<div class="card hidden"></div>';
             const isRed = card.suit === '♥' || card.suit === '♦';
             const colorClass = isRed ? 'red' : 'black';
-            return `<div class="card"><div class="card-top ${colorClass}">${card.value}${card.suit}</div><div class="card-center ${colorClass}">${card.suit}</div><div class="card-bottom ${colorClass}">${card.value}${card.suit}</div></div>`;
+            return `<div class="card">
+                <div class="card-top ${colorClass}">${card.value}${card.suit}</div>
+                <div class="card-center ${colorClass}">${card.suit}</div>
+                <div class="card-bottom ${colorClass}">${card.value}${card.suit}</div>
+            </div>`;
         }
 
         function updateBJDisplay() {
@@ -1384,8 +1554,14 @@
         }
 
         function bjDeal() {
-            if (bjCurrentBet === 0) { alert('Select bet amount'); return; }
-            if (bjCurrentBet > balance) { alert('Insufficient balance'); return; }
+            if (bjCurrentBet === 0) { 
+                alert('Select bet amount'); 
+                return; 
+            }
+            if (bjCurrentBet > balance) { 
+                alert('Insufficient balance'); 
+                return; 
+            }
             bjOriginalBet = bjCurrentBet;
             bjDoubledDown = false;
             createDeck();
@@ -1414,12 +1590,13 @@
             bjDetermineWinner();
         }
 
-        // FIXED: Double down now properly doubles the bet and pays correctly
         function bjDouble() {
-            if (bjOriginalBet > balance) { alert('Insufficient balance to double'); return; }
-            // Double the bet by deducting original bet amount again
+            if (bjOriginalBet > balance) { 
+                alert('Insufficient balance to double'); 
+                return; 
+            }
             updateBalance(-bjOriginalBet);
-            bjCurrentBet = bjOriginalBet * 2; // Total bet is now 2x original
+            bjCurrentBet = bjOriginalBet * 2;
             bjDoubledDown = true;
             bjPlayerHand.push(bjDeck.pop());
             updateBJDisplay();
@@ -1436,22 +1613,19 @@
             else bjEndGame('push');
         }
 
-        // FIXED: Proper payout calculation for double down
         function bjEndGame(result) {
             bjGameActive = false;
             updateBJDisplay();
             let winAmount = 0, message = '';
-            const totalBet = bjCurrentBet; // This is either original or doubled
+            const totalBet = bjCurrentBet;
             
             switch(result) {
                 case 'blackjack': 
-                    // Blackjack pays 2.5x original bet (not doubled bet)
                     winAmount = bjOriginalBet * 2.5; 
                     message = `🎉 BLACKJACK! <span class="multiplier-tag">2.5x</span>`; 
                     break;
                 case 'dealerBust':
                 case 'win': 
-                    // Win pays 2x total bet (so doubled bet pays 4x original)
                     winAmount = totalBet * 2;
                     const displayMultiplier = bjDoubledDown ? '4x' : '2x';
                     message = `🎉 You Win! <span class="multiplier-tag">${displayMultiplier}</span>`; 
@@ -1461,7 +1635,7 @@
                     message = '❌ You Lose'; 
                     break;
                 case 'push': 
-                    winAmount = totalBet; // Return full bet including double
+                    winAmount = totalBet;
                     message = '🤝 Push - Bet Returned'; 
                     break;
             }
@@ -1473,7 +1647,11 @@
         }
 
         function bjReset() {
-            bjPlayerHand = []; bjDealerHand = []; bjCurrentBet = 0; bjOriginalBet = 0; bjDoubledDown = false;
+            bjPlayerHand = []; 
+            bjDealerHand = []; 
+            bjCurrentBet = 0; 
+            bjOriginalBet = 0; 
+            bjDoubledDown = false;
             document.getElementById('playerCards').innerHTML = '';
             document.getElementById('dealerCards').innerHTML = '';
             document.getElementById('playerScore').textContent = '';
@@ -1505,7 +1683,7 @@
             const users = getAllUsers();
             let html = '';
             Object.values(users).forEach(user => {
-                if (user.id === 'admin') return; // Skip admin user
+                if (user.id === 'admin') return;
                 const userCases = cases.filter(c => c.ownerId === user.id);
                 const totalOpens = userCases.reduce((sum, c) => sum + (c.totalOpens || 0), 0);
                 html += `<tr>
@@ -1532,7 +1710,10 @@
         function adjustBalance(userId, amount) {
             const users = getAllUsers();
             if (users[userId]) {
-                users[userId].balance = (users[userId].balance || 0) + amount;
+                const currentCents = Math.round((users[userId].balance || 0) * 100);
+                const amountCents = Math.round(amount * 100);
+                const newCents = currentCents + amountCents;
+                users[userId].balance = newCents / 100;
                 if (users[userId].balance < 0) users[userId].balance = 0;
                 
                 if (currentUser && currentUser.id === userId) {
@@ -1586,3 +1767,39 @@
     </script>
 </body>
 </html>
+```
+
+Key Changes Made:
+
+1. Simple 3-Click Case Opening System 🎮
+
+· Click the case 3 times to open it
+· Visual click counter shows remaining clicks
+· Each click has a satisfying animation
+· After 3 clicks, the winning item is revealed
+
+2. Case Appearance Selection 🎨
+
+· Added 6 case appearance options (case1.png to case6.png)
+· Select appearance when creating/editing a case
+· Cases display their selected appearance in the grid and opening view
+· Visual selector with previews
+
+3. How It Works:
+
+1. View Case: Click "View & Open" on any case
+2. Preview: See all items with rarities and chances
+3. Open: Click "Open Case" to go to the opening screen
+4. Click to Open: Click the case 3 times (payment deducted on first click)
+5. Win Item: After 3 clicks, the winning item is revealed with rarity color and value
+
+4. Features:
+
+· Payment deducted only on first click
+· Case stats update after opening
+· Owner earnings calculated
+· Rarity colors for all items
+· Smooth click animations
+· "Open Again" button to replay
+
+The case opening is now simple and intuitive - just click the case 3 times and watch the item appear!
