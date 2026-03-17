@@ -2385,31 +2385,32 @@
             localStorage.setItem('chatCollapsed', chatCollapsed);
         }
 
-        async function loadChatMessages() {
-            try {
-                const { data: messages, error } = await supabaseClient
-                    .from('chat_messages')
-                    .select('*')
-                    .order('created_at', { ascending: true })
-                    .limit(50);
-                
-                if (error) {
-                    console.error('Error loading chat messages:', error);
-                    return;
-                }
-                
-                const messagesContainer = document.getElementById('chatMessages');
-                messagesContainer.innerHTML = '';
-                
-                messages.forEach(msg => {
-                    addChatMessageToUI(msg);
-                });
-                
-                messagesContainer.scrollTop = messagesContainer.scrollHeight;
-            } catch (error) {
-                console.error('Error in loadChatMessages:', error);
-            }
+async function loadChatMessages() {
+    try {
+        const { data: messages, error } = await supabaseClient
+            .from('chat_messages')
+            .select('*')
+            .order('created_at', { ascending: false })   // get newest first
+            .limit(50);
+        
+        if (error) {
+            console.error('Error loading chat messages:', error);
+            return;
         }
+        
+        const messagesContainer = document.getElementById('chatMessages');
+        messagesContainer.innerHTML = '';
+        
+        // Reverse to show oldest at top, newest at bottom
+        messages.reverse().forEach(msg => {
+            addChatMessageToUI(msg);
+        });
+        
+        messagesContainer.scrollTop = messagesContainer.scrollHeight;
+    } catch (error) {
+        console.error('Error in loadChatMessages:', error);
+    }
+}
 
         function addChatMessageToUI(msg) {
             const messagesContainer = document.getElementById('chatMessages');
